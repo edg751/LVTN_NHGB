@@ -6,6 +6,8 @@ import styled from "@emotion/styled";
 import { useForm, useFormState } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import InputField from "components/form-control/InputField";
+import PasswordField from "components/form-control/PasswordField";
 
 LoginForm.propTypes = {};
 
@@ -14,13 +16,13 @@ function LoginForm(props) {
     margin: 0 auto;
   `;
   const StyledTypography = styled(Typography)`
-    textAlign: "center",
-    margin: useTheme().spacing(2, 0, 4, 0),
+    text-align: center;
+    margin: 16px;
   `;
   const StyledButton = styled(Button)`
-    margin: "50px auto 0px auto !Important",
-    display: "block !Important",
-`;
+    margin: 50px auto 0px auto !important;
+    display: block !important;
+  `;
 
   const schema = yup.object().shape({});
   const form = useForm({
@@ -43,9 +45,15 @@ function LoginForm(props) {
       </StyledAvatar>
 
       <StyledTypography component="h3" variant="h5" sx={{ pt: "30px" }}>
-        Create An Account
+        Sign in
       </StyledTypography>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <InputField name="identifier" label="Email" form={form}></InputField>
+        <PasswordField
+          name="password"
+          label="Password"
+          form={form}
+        ></PasswordField>
         <StyledButton
           type="submit"
           disabled={isSubmitting}
@@ -54,7 +62,7 @@ function LoginForm(props) {
           color="primary"
           sx={{ p: "15px" }}
         >
-          Create an account
+          Sign in
         </StyledButton>
       </form>
     </div>
