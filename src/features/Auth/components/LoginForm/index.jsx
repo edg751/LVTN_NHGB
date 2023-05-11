@@ -31,20 +31,26 @@ function LoginForm(props) {
   const schema = yup.object().shape({});
   const form = useForm({
     defaultValues: {
-      fullName: "",
       email: "",
       password: "",
-      retypePassword: "",
     },
     resolver: yupResolver(schema),
   });
 
-  const handleSubmit = async (values) => {};
+  //Vì phải đợi để có trạng thái isSubmitting nên ta thêm async
+  const handleSubmit = async (values) => {
+    const { onSubmit } = props;
+    console.log(values);
+    if (onSubmit) {
+      await onSubmit(values);
+    }
+    // form.reset();
+  };
   const { isSubmitting } = useFormState(form);
 
   return (
     <div>
-      <StyledAvatar backgroundColor="secondary.main">
+      <StyledAvatar>
         <AccountCircleIcon></AccountCircleIcon>
       </StyledAvatar>
 
@@ -52,7 +58,7 @@ function LoginForm(props) {
         Sign in
       </StyledTypography>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <InputField name="identifier" label="Email" form={form}></InputField>
+        <InputField name="email" label="Email" form={form}></InputField>
         <PasswordField
           name="password"
           label="Password"

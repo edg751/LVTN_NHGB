@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LoginForm from "../LoginForm";
+import { login } from "features/Auth/userSlice";
+import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 Login.propTypes = {
   closeDialog: PropTypes.func,
@@ -8,7 +11,24 @@ Login.propTypes = {
 
 function Login(props) {
   const { closeDialog } = props;
-  const handleSubmit = async (values) => {};
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (values) => {
+    try {
+      // console.log("Form submit: ", values);
+      const action = login(values);
+      const resultAction = await dispatch(action);
+      const user = unwrapResult(resultAction);
+      console.log("New user", user);
+      //Làm gì tiếp theo nếu đăng ký thành công !
+      //Close dialog
+      if (closeDialog) {
+        closeDialog();
+      }
+    } catch (error) {
+      console.log("Error in Login: ", error);
+    }
+  };
 
   return (
     <div>

@@ -44,7 +44,7 @@ function RegisterForm(props) {
 
   return (
     <div>
-      <StyledAvatar backgroundColor="secondary.main">
+      <StyledAvatar>
         <AccountCircleIcon></AccountCircleIcon>
       </StyledAvatar>
 
