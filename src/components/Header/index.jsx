@@ -15,8 +15,15 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { Dialog, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogContent } from "@mui/material";
 import Login from "features/Auth/components/Login";
+import Register from "features/Auth/components/Register";
+import { Link } from "react-router-dom";
+
+const MODE = {
+  login: "login",
+  register: "register",
+};
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,9 +65,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const StyleButtonAuth = styled(Button)`
+  margin-left: 20px;
+  text-decoration: none;
+  color: white;
+  background-color: #27006f;
+  &:hover {
+    background-color: #1a0049;
+  }
+`;
+
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [mode, setMode] = React.useState(MODE.login);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -151,6 +169,7 @@ export default function Header() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
+      Profile Account
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -216,6 +235,8 @@ export default function Header() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+
+            {/* Profile
             <IconButton
               size="large"
               edge="end"
@@ -226,7 +247,8 @@ export default function Header() {
               sx={{ color: "#27006f" }}
             >
               <AccountCircle />
-            </IconButton>
+            </IconButton> */}
+            <StyleButtonAuth onClick={handleClickOpen}> LOGIN</StyleButtonAuth>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -245,14 +267,34 @@ export default function Header() {
       {renderMobileMenu}
       {renderMenu}
       <Dialog
-        open={true}
-        onClose={null}
+        open={open}
+        onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         disableEscapeKeyDown
       >
         <DialogContent>
-          <Login closeDialog={handleClose} />
+          {mode == MODE.login && (
+            <>
+              <Login closeDialog={handleClose} />
+              <Box textAlign="center" mt={"10px"}>
+                <Button onClick={() => setMode(MODE.register)}>
+                  Chưa có tài khoản ? Đăng ký ngay.
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {mode == MODE.register && (
+            <>
+              <Register closeDialog={handleClose} />
+              <Box textAlign="center" mt={"10px"}>
+                <Button onClick={() => setMode(MODE.login)}>
+                  Đã có tài khoản ? Đăng nhập ngay.
+                </Button>
+              </Box>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </Box>
