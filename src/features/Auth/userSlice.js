@@ -51,7 +51,7 @@ const useSlice = createSlice({
       state.current = action.payload; //action.payload là chỗ return ở hàm register
     },
     [login.fulfilled]: (state, action) => {
-      state.current = action.payload; //action.payload là chỗ return ở hàm register
+      state.current = action.payload; //action.payload là chỗ return ở hàm login
     },
   },
 });

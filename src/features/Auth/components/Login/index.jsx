@@ -4,6 +4,7 @@ import LoginForm from "../LoginForm";
 import { login } from "features/Auth/userSlice";
 import { useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { useSnackbar } from "notistack";
 
 Login.propTypes = {
   closeDialog: PropTypes.func,
@@ -12,6 +13,7 @@ Login.propTypes = {
 function Login(props) {
   const { closeDialog } = props;
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async (values) => {
     try {
@@ -19,14 +21,14 @@ function Login(props) {
       const action = login(values);
       const resultAction = await dispatch(action);
       const user = unwrapResult(resultAction);
-      console.log("New user", user);
+      console.log("Login success ", user);
       //Làm gì tiếp theo nếu đăng ký thành công !
       //Close dialog
       if (closeDialog) {
         closeDialog();
       }
     } catch (error) {
-      console.log("Error in Login: ", error);
+      enqueueSnackbar(error.message, { variant: "error" });
     }
   };
 

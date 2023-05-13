@@ -40,7 +40,7 @@ function LoginForm(props) {
   //Vì phải đợi để có trạng thái isSubmitting nên ta thêm async
   const handleSubmit = async (values) => {
     const { onSubmit } = props;
-    console.log(values);
+    // console.log(values);
     if (onSubmit) {
       await onSubmit(values);
     }

@@ -19,6 +19,7 @@ import { Button, Dialog, DialogContent } from "@mui/material";
 import Login from "features/Auth/components/Login";
 import Register from "features/Auth/components/Register";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const MODE = {
   login: "login",
@@ -83,6 +84,10 @@ export default function Header() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const loggedInUser = useSelector((state) => state.user.current);
+  // Nếu nó có id thì là đăng nhập rồi
+  const isLoggin = !!loggedInUser.id;
+  // console.log("isLogin: ", isLoggin);
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {

@@ -28,11 +28,9 @@ axiosClient.interceptors.response.use(
     const URLs = ["/auth/register", "/auth/login"]; // Các đường dẫn liên quan đến đăng ký và đăng nhập.
     if (URLs.includes(config.url) && status === 401) {
       // Kiểm tra đường dẫn và mã trạng thái để xác định loại lỗi.
-      const errorList = data.data || []; // Danh sách lỗi.
-      const firstError = errorList.length > 0 ? errorList[0] : {}; // Lấy ra lỗi đầu tiên từ danh sách lỗi.
-      const messageList = firstError.messages || []; // Danh sách thông báo lỗi.
-      const firstMessage = messageList.length > 0 ? messageList[0] : {}; // Lấy ra thông báo lỗi đầu tiên từ danh sách thông báo lỗi.
-      throw new Error(firstMessage.message); // Ném ra một lỗi mới với thông báo lỗi đầu tiên.
+      const errorList = data.message || []; // Danh sách lỗi.
+      // console.log("data: ", errorList);
+      throw new Error(errorList); // Ném ra một lỗi mới với thông báo lỗi đầu tiên.
     }
     return Promise.reject(error); // Trả về một promise bị từ chối với lượng error, để cho các interceptor tiếp theo hoặc phía gọi API có thể xử lý.
   }
