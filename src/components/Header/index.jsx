@@ -19,7 +19,8 @@ import { Button, Dialog, DialogContent } from "@mui/material";
 import Login from "features/Auth/components/Login";
 import Register from "features/Auth/components/Register";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "features/Auth/userSlice";
 
 const MODE = {
   login: "login",
@@ -80,14 +81,17 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [mode, setMode] = React.useState(MODE.login);
+  const dispath = useDispatch();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const loggedInUser = useSelector((state) => state.user.current);
   // Nếu nó có id thì là đăng nhập rồi
-  const isLoggin = !!loggedInUser.id;
-  // console.log("isLogin: ", isLoggin);
+
+  const isLoggin = !!loggedInUser.user_id;
+  // console.log("isLogin: ", loggedInUser.user_id);
+
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
@@ -115,6 +119,13 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogOut = () => {
+    const action = logout();
+    setAnchorEl(null);
+
+    dispath(action);
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -134,6 +145,7 @@ export default function Header() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleLogOut}>Logout</MenuItem>
     </Menu>
   );
 
@@ -241,19 +253,27 @@ export default function Header() {
               </Badge>
             </IconButton>
 
-            {/* Profile
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              sx={{ color: "#27006f" }}
-            >
-              <AccountCircle />
-            </IconButton> */}
-            <StyleButtonAuth onClick={handleClickOpen}> LOGIN</StyleButtonAuth>
+            {isLoggin && (
+              <>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  sx={{ color: "#27006f" }}
+                >
+                  <AccountCircle />
+                </IconButton>
+              </>
+            )}
+            {!isLoggin && (
+              <StyleButtonAuth onClick={handleClickOpen}>
+                {" "}
+                LOGIN
+              </StyleButtonAuth>
+            )}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

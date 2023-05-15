@@ -7,10 +7,6 @@ export const register = createAsyncThunk(
   async (payload, thunkAPI) => {
     //Call API để đăng ký
     const data = await userApi.register(payload);
-    //Lưu data vào local stogare
-    localStorage.setItem(StorageKeys.TOKEN, data.jwt);
-    //Vì data.user là object nên phải sử dụng json.stringify
-    localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
     // return userdata
     return data.user;
   }

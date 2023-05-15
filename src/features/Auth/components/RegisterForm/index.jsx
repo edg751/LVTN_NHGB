@@ -31,7 +31,7 @@ function RegisterForm(props) {
   const schema = yup.object().shape({});
   const form = useForm({
     defaultValues: {
-      fullName: "",
+      fullname: "",
       email: "",
       password: "",
       retypePassword: "",
@@ -39,7 +39,13 @@ function RegisterForm(props) {
     resolver: yupResolver(schema),
   });
 
-  const handleSubmit = async (values) => {};
+  const handleSubmit = async (values) => {
+    const { onSubmit } = props;
+    if (onSubmit) {
+      console.log("Values register: ", values);
+      await onSubmit(values);
+    }
+  };
   const { isSubmitting } = useFormState(form);
 
   return (
@@ -52,7 +58,7 @@ function RegisterForm(props) {
         Create An Account
       </StyledTypography>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <InputField name="fullName" label="Full Name" form={form}></InputField>
+        <InputField name="fullname" label="Full Name" form={form}></InputField>
         <InputField name="email" label="Email" form={form}></InputField>
 
         <PasswordField
