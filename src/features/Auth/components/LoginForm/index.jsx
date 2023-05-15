@@ -32,7 +32,7 @@ function LoginForm(props) {
   const form = useForm({
     defaultValues: {
       email: "",
-      password: "s",
+      password: "",
     },
     resolver: yupResolver(schema),
   });
