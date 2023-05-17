@@ -16,6 +16,7 @@ function RegisterForm(props) {
   const StyledAvatar = styled(Avatar)`
     margin: 0 auto;
   `;
+
   const StyledTypography = styled(Typography)`
     text-align: center;
     margin: 16px;

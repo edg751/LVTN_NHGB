@@ -21,7 +21,8 @@ import Register from "features/Auth/components/Register";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "features/Auth/userSlice";
-
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 const MODE = {
   login: "login",
   register: "register",
@@ -234,21 +235,25 @@ export default function Header() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              sx={{ color: "#27006f" }}
-            >
+            {/* WISH */}
+            <IconButton size="large" sx={{ color: "#27006f" }}>
+              <FavoriteIcon />
+            </IconButton>
+
+            {/* CART */}
+            <IconButton size="large" sx={{ color: "#27006f" }}>
               <Badge badgeContent={4} color="error">
-                <MailIcon />
+                <ShoppingCartIcon />
               </Badge>
             </IconButton>
+
+            {/* NOTIFY */}
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               sx={{ color: "#27006f" }}
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={1} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
