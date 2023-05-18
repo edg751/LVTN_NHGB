@@ -28,15 +28,28 @@ const MODE = {
   register: "register",
 };
 
+const ButtonLink = styled(Button)`
+  margin: 0 10px;
+  &:hover {
+    background-color: white;
+  }
+`;
+
+const LinkNotDecoration = styled(Link)`
+  color: black;
+  text-decoration: none;
+`;
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
+  right: 0,
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginRight: theme.spacing(2),
-  marginLeft: 0,
+  marginLeft: "200px",
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
@@ -221,8 +234,35 @@ export default function Header() {
             component="div"
             sx={{ display: { xs: "none", sm: "block", color: "#27006f" } }}
           >
-            NHGB
+            <LinkNotDecoration to="/">NHGB</LinkNotDecoration>
           </Typography>
+          <Box sx={{ flexGrow: 0.1 }} />
+
+          <ButtonLink>
+            <LinkNotDecoration to="/">NAM</LinkNotDecoration>
+          </ButtonLink>
+
+          <ButtonLink>
+            <LinkNotDecoration to="/">NỮ</LinkNotDecoration>
+          </ButtonLink>
+
+          <ButtonLink>
+            <LinkNotDecoration to="/">ÁO</LinkNotDecoration>
+          </ButtonLink>
+
+          <ButtonLink>
+            <LinkNotDecoration to="/">QUẦN</LinkNotDecoration>
+          </ButtonLink>
+
+          <ButtonLink>
+            <LinkNotDecoration to="/">ÁO KHOÁC</LinkNotDecoration>
+          </ButtonLink>
+
+          <ButtonLink>
+            <LinkNotDecoration to="/">PHỤ KIỆN</LinkNotDecoration>
+          </ButtonLink>
+          <Box sx={{ flexGrow: 1 }} />
+
           <Search>
             <SearchIconWrapper sx={{ color: "#27006f" }}>
               <SearchIcon />
@@ -233,7 +273,6 @@ export default function Header() {
               sx={{ color: "#27006f" }}
             />
           </Search>
-          <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {/* WISH */}
             <IconButton size="large" sx={{ color: "#27006f" }}>
