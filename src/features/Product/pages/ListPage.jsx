@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import { Box, Container, Grid, Pagination, Paper } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import ProductSkeletonList from "./ProductSkeletonList";
+import ProductFilter from "../components/ProductFilter";
 
 ListPage.propTypes = {};
 
@@ -19,16 +20,30 @@ const PaginationBox = styled(Box)`
   margin-bottom: 30px;
 `;
 
+const StyledContainer = styled(Container)`
+  margin-top: 30px;
+`;
+
 function ListPage(props) {
+  const [Filter, setFilter] = useState({
+    _page: 1,
+    _limit: 12,
+    _sort: "salePrice:ASC",
+    "category.id": 1,
+  });
+
+  const handleFilterChange = (newFilter) => {};
+
   return (
-    <Box>
+    <StyledContainer>
       <Container>
         <Grid container spacing={1}>
           {/*COLUMN LEFT */}
           <GridLeft item>
-            <Paper elevation={0}>
-              <div>FILTER LEFT</div>
-            </Paper>
+            <ProductFilter
+              filters={Filter}
+              onChange={handleFilterChange}
+            ></ProductFilter>
           </GridLeft>
 
           {/*COLUMN RIGHT */}
@@ -48,7 +63,7 @@ function ListPage(props) {
           </GridRight>
         </Grid>
       </Container>
-    </Box>
+    </StyledContainer>
   );
 }
 
