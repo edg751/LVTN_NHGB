@@ -35,7 +35,7 @@ function ProductFilter(props) {
         <FilterByStyle onChange={handleStyleChange}></FilterByStyle>
       </StyledPaper>
 
-      <StyledPaper elevation={0}>
+      <StyledPaper elevation={s0}>
         <FilterByMaterial onChange={handleMaterialChange}></FilterByMaterial>
       </StyledPaper>
     </Box>
