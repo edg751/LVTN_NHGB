@@ -5,6 +5,10 @@ import styled from "@emotion/styled";
 
 FilterByCategory.propTypes = {};
 
+const StyledTypography = styled(Typography)`
+  font-size: 15px;
+`;
+
 const StyledUl = styled.ul`
   padding: 0;
   margin: 0;
@@ -32,16 +36,16 @@ function FilterByCategory(props) {
       <Typography variant="subtitle2">LOẠI SẢN PHẨM</Typography>
       <StyledUl>
         <li>
-          <Typography variant="body2">Thời trang</Typography>
+          <StyledTypography variant="body2">Thời trang</StyledTypography>
         </li>
         <li>
-          <Typography variant="body2">Phụ kiện</Typography>
+          <StyledTypography variant="body2">Phụ kiện</StyledTypography>
         </li>{" "}
         <li>
-          <Typography variant="body2">Thời trang</Typography>
+          <StyledTypography variant="body2">Thời trang</StyledTypography>
         </li>
         <li>
-          <Typography variant="body2">Phụ kiện</Typography>
+          <StyledTypography variant="body2">Phụ kiện</StyledTypography>
         </li>
       </StyledUl>
     </StyledBox>

@@ -3,6 +3,8 @@ import { Box, Container, Grid, Pagination, Paper } from "@mui/material";
 import React, { useState } from "react";
 import ProductSkeletonList from "./ProductSkeletonList";
 import ProductFilter from "../components/ProductFilter";
+import FilterByViewer from "../components/Filter/FilterByViewer";
+import ProductList from "../components/ProductList";
 
 ListPage.propTypes = {};
 
@@ -49,14 +51,15 @@ function ListPage(props) {
           {/*COLUMN RIGHT */}
           <GridRight item>
             <Paper elevation={0}>
-              <div>PRODUCT LIST</div>
-              <ProductSkeletonList />
+              <FilterByViewer />
+              {/* <ProductSkeletonList /> */}
+              <ProductList />
             </Paper>
             <PaginationBox>
               <Pagination
                 color="primary"
-                count="10"
-                page="1"
+                count={Filter._limit}
+                page={Filter._page}
                 onChange={null}
               ></Pagination>
             </PaginationBox>

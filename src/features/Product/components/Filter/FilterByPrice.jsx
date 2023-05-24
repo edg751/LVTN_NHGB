@@ -1,6 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 import styled from "@emotion/styled";
 
 FilterByPrice.propTypes = {};
@@ -19,54 +28,72 @@ const StyledUl = styled.ul`
     margin-top: "8px";
     transition: all 0.25s;
 
-    &:hover {
+    border-radius: 10px;
+
+    /* &:hover {
       cursor: pointer;
       color: #27006f;
       background-color: #fae1ae;
       border-radius: 5px;
-    }
+    } */
   }
 `;
 
-const StyledLabel = styled.span`
-  font-size: 14px;
-`;
-
-const CustomFormControlLabel = styled(FormControlLabel)`
-  display: flex;
-  align-items: center;
-`;
+const handleChangeColor = (values) => {
+  console.log(values.target.value);
+};
 function FilterByPrice(props) {
   return (
     <StyledBox>
       <Typography variant="subtitle2">GIÁ</Typography>
       <StyledUl>
         <li>
-          <CustomFormControlLabel
-            control={
-              <Checkbox
-                checked={false}
-                onChange={null}
-                name={1000}
-                color="primary"
+          <FormControl>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              // defaultValue="female"
+              name="radio-buttons-group"
+              style={{ display: "flex", flexDirection: "row" }}
+            >
+              <FormControlLabel
+                onChange={handleChangeColor}
+                value="1"
+                control={<Radio style={{ color: "black" }} />}
+                label={
+                  <span style={{ fontSize: "14px" }}>Nhỏ hơn 100.000đ</span>
+                }
+                style={{ marginRight: "10px" }}
               />
-            }
-            label={<StyledLabel>Nhỏ hơn 100.000đ</StyledLabel>}
-          />
-        </li>
+              <FormControlLabel
+                onChange={handleChangeColor}
+                value="2"
+                control={<Radio style={{ color: "black" }} />}
+                label={
+                  <span style={{ fontSize: "14px" }}>
+                    Từ 100.000đ - 250.000đ
+                  </span>
+                }
+                style={{ marginRight: "10px" }}
+              />
+              <FormControlLabel
+                onChange={handleChangeColor}
+                value="3"
+                control={<Radio style={{ color: "black" }} />}
+                label={
+                  <span style={{ fontSize: "14px" }}>
+                    Từ 250.000đ - 500.000đ
+                  </span>
+                }
+              />
 
-        <li>
-          <CustomFormControlLabel
-            control={
-              <Checkbox
-                checked={false}
-                onChange={null}
-                name={1000}
-                color="primary"
+              <FormControlLabel
+                onChange={handleChangeColor}
+                value="4"
+                control={<Radio style={{ color: "black" }} />}
+                label={<span style={{ fontSize: "14px" }}>Trên 500.000đ</span>}
               />
-            }
-            label={<StyledLabel> Từ 500.000đ - 700.000đ</StyledLabel>}
-          />
+            </RadioGroup>
+          </FormControl>
         </li>
       </StyledUl>
     </StyledBox>

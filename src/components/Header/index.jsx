@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "features/Auth/userSlice";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 const MODE = {
   login: "login",
@@ -220,21 +221,15 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "#fcaf17" }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            aria-label="open drawer"
-            sx={{ mr: 2, color: "#27006f" }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block", color: "#27006f" } }}
           >
-            <LinkNotDecoration to="/">NHGB</LinkNotDecoration>
+            <LinkNotDecoration to="/">
+              NHGB <FormatColorFillIcon />
+            </LinkNotDecoration>
           </Typography>
           <Box sx={{ flexGrow: 0.1 }} />
 
