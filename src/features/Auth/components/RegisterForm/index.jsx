@@ -56,21 +56,21 @@ function RegisterForm(props) {
       </StyledAvatar>
 
       <StyledTypography component="h3" variant="h5" sx={{ pt: "30px" }}>
-        Create An Account
+        Đăng ký tài khoản
       </StyledTypography>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <InputField name="fullname" label="Full Name" form={form}></InputField>
+        <InputField name="fullname" label="Họ và tên" form={form}></InputField>
         <InputField name="email" label="Email" form={form}></InputField>
 
         <PasswordField
           name="password"
-          label="Password"
+          label="Mật khẩu"
           form={form}
         ></PasswordField>
 
         <PasswordField
           name="retypePassword"
-          label="Retype Password"
+          label="Nhập lại mật khẩu"
           form={form}
         ></PasswordField>
 
@@ -82,7 +82,7 @@ function RegisterForm(props) {
           color="primary"
           sx={{ p: "15px" }}
         >
-          Create an account
+          Đăng ký
         </StyledButton>
       </form>
     </div>

@@ -55,13 +55,13 @@ function LoginForm(props) {
       </StyledAvatar>
 
       <StyledTypography component="h3" variant="h5" sx={{ pt: "30px" }}>
-        Sign in
+        Đăng nhập
       </StyledTypography>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <InputField name="email" label="Email" form={form}></InputField>
         <PasswordField
           name="password"
-          label="Password"
+          label="Mật khẩu"
           form={form}
         ></PasswordField>
         <StyledButton
@@ -72,7 +72,7 @@ function LoginForm(props) {
           color="primary"
           sx={{ p: "15px" }}
         >
-          Sign in
+          Đăng nhập
         </StyledButton>
       </form>
     </div>

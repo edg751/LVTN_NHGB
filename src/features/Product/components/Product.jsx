@@ -44,40 +44,45 @@ function Product(props) {
 
   //
   const [selectedColor, setSelectedColor] = useState("");
-
+  const [linkImage, setLinkImage] = useState(product.image[0].image_link);
   const handleChangeColor = (color) => {
     setSelectedColor(color);
     console.log("Màu: ", color);
+    for (const colors of product.image) {
+      if (colors.color == color) {
+        setLinkImage(colors.image_link);
+      }
+    }
   };
+
   //
   const handleClick = () => {};
   return (
     <Box padding={1} onClick={handleClick}>
       <Box padding={1}>
-        <Link to="/">
-          <StyledImg
-            src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-polo-nam-apm4239-dlv-2.jpg?v=1679886098000"
-            alt=""
-            width={"100%"}
-          />
+        <Link to={`${product.id}`}>
+          <StyledImg src={linkImage} alt="" width={"100%"} />
         </Link>
       </Box>
       <EllipsisTypography variant="body2">
-        <LinkNotDecoration to="/">
-          {"Áo Polo Nam Airycool Áo Polo Nam Airycool Áo Polo Nam Airycool "}
+        <LinkNotDecoration to={`${product.id}`}>
+          {product.name}
         </LinkNotDecoration>
       </EllipsisTypography>
+
       <StyledTypographyPrice variant="body2">
         <Box component="span" fontSize="16px" fontWeight="bold" marginRight={1}>
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
-          }).format(200000)}
+          }).format(product.price)}
         </Box>
       </StyledTypographyPrice>
+
       <ColorSelector
         selectedColor={selectedColor}
         handleChangeColor={handleChangeColor}
+        color={product.color}
       />
     </Box>
   );

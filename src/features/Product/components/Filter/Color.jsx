@@ -4,28 +4,23 @@ import styled from "@emotion/styled";
 
 ColorSelector.propTypes = {};
 
-function ColorSelector({ selectedColor, handleChangeColor }) {
-  const colors = [
-    { id: 1, name: "Đen", colorValue: "black" },
-    { id: 2, name: "Trắng", colorValue: "white" },
-    { id: 3, name: "Xanh dương", colorValue: "blue" },
-    // Thêm các màu khác nếu cần
-  ];
+function ColorSelector({ selectedColor, handleChangeColor, color }) {
   return (
     <div>
-      {colors.map((color) => (
-        <label key={color.id}>
+      {color.map((color, index) => (
+        <label key={index}>
           <input
             type="radio"
             hidden
             name="color"
-            value={color.colorValue}
-            checked={selectedColor === color.colorValue}
-            onChange={() => handleChangeColor(color.colorValue)}
+            value={color}
+            checked={selectedColor === color}
+            onChange={() => handleChangeColor(color)}
           />
           <span
             style={{
-              backgroundColor: color.colorValue,
+              cursor: "pointer",
+              backgroundColor: color,
               width: "17px",
               height: "17px",
               display: "inline-block",

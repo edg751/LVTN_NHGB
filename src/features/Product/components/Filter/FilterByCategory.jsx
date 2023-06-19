@@ -1,53 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+} from "@mui/material";
 import styled from "@emotion/styled";
+import categoryApi from "api/categoriesApi";
 
 FilterByCategory.propTypes = {};
-
-const StyledTypography = styled(Typography)`
-  font-size: 15px;
-`;
-
-const StyledUl = styled.ul`
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-
-  & > li {
-    margin-top: 8px;
-    transition: all 0.25s;
-
-    &:hover {
-      cursor: pointer;
-      color: #27006f;
-      background-color: #fae1ae;
-      border-radius: 5px;
-    }
-  }
-`;
 
 const StyledBox = styled(Box)`
   padding: 16px;
 `;
+
 function FilterByCategory(props) {
+  const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await categoryApi.getAllCategory(0);
+        setCategoryList(
+          list.data.map((x) => ({
+            id: x.category_id,
+            name: x.category_name,
+          }))
+        );
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
   return (
     <StyledBox>
       <Typography variant="subtitle2">LOẠI SẢN PHẨM</Typography>
-      <StyledUl>
-        <li>
-          <StyledTypography variant="body2">Thời trang</StyledTypography>
-        </li>
-        <li>
-          <StyledTypography variant="body2">Phụ kiện</StyledTypography>
-        </li>{" "}
-        <li>
-          <StyledTypography variant="body2">Thời trang</StyledTypography>
-        </li>
-        <li>
-          <StyledTypography variant="body2">Phụ kiện</StyledTypography>
-        </li>
-      </StyledUl>
+
+      <FormGroup style={{ display: "flex", flexDirection: "row" }}>
+        {categoryList.map((category) => (
+          <FormControlLabel
+            key={category.id}
+            onChange={null}
+            value={category.name}
+            control={
+              <Checkbox
+                sx={{
+                  color: "black",
+                  "&.Mui-checked": {
+                    color: "black",
+                  },
+                }}
+              />
+            }
+            label={category.name}
+          />
+        ))}
+      </FormGroup>
     </StyledBox>
   );
 }

@@ -104,13 +104,14 @@ export default function Header() {
   const loggedInUser = useSelector((state) => state.user.current);
   // Nếu nó có id thì là đăng nhập rồi
 
-  const isLoggin = !!loggedInUser.user_id;
+  const isLoggin = loggedInUser && loggedInUser.user_id ? true : null;
   // console.log("isLogin: ", loggedInUser.user_id);
 
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
     setOpen(false);
+    setMode(MODE.login);
   };
 
   const handleClickOpen = () => {
@@ -140,7 +141,7 @@ export default function Header() {
 
     dispath(action);
   };
-
+  const handleSwapMode = () => {};
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu

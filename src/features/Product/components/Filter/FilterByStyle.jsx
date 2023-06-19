@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import styled from "@emotion/styled";
+import categoryApi from "api/categoriesApi";
 
 FilterByStyle.propTypes = {};
 
@@ -19,70 +20,46 @@ const changeStyle = (e) => {
   console.log(e.target.value);
 };
 function FilterByStyle(props) {
+  const [styleList, setStyleList] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await categoryApi.getAllStyle(0);
+        setStyleList(
+          list.data.map((x) => ({
+            id: x.style_id,
+            name: x.style_name,
+          }))
+        );
+        console.log(list);
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
   return (
     <StyledBox>
       <Typography variant="subtitle2">PHONG CÁCH</Typography>
+
       <FormGroup style={{ display: "flex", flexDirection: "row" }}>
-        <FormControlLabel
-          onChange={changeStyle}
-          value={"thanhlich"}
-          control={
-            <Checkbox
-              sx={{
-                color: "black",
-                "&.Mui-checked": {
+        {styleList.map((style) => (
+          <FormControlLabel
+            key={style.id}
+            onChange={changeStyle}
+            value={style.name}
+            control={
+              <Checkbox
+                sx={{
                   color: "black",
-                },
-              }}
-            />
-          }
-          label="Thanh lịch"
-        />
-        <FormControlLabel
-          onChange={changeStyle}
-          value={"dethuong"}
-          control={
-            <Checkbox
-              sx={{
-                color: "black",
-                "&.Mui-checked": {
-                  color: "black",
-                },
-              }}
-            />
-          }
-          label="Dễ thương"
-        />
-        <FormControlLabel
-          onChange={changeStyle}
-          value={"datiec"}
-          control={
-            <Checkbox
-              sx={{
-                color: "black",
-                "&.Mui-checked": {
-                  color: "black",
-                },
-              }}
-            />
-          }
-          label="Dạ tiệc"
-        />
-        <FormControlLabel
-          onChange={changeStyle}
-          value={"catinh"}
-          control={
-            <Checkbox
-              sx={{
-                color: "black",
-                "&.Mui-checked": {
-                  color: "black",
-                },
-              }}
-            />
-          }
-          label="Cá tính"
-        />
+                  "&.Mui-checked": {
+                    color: "black",
+                  },
+                }}
+              />
+            }
+            label={style.name}
+          />
+        ))}
       </FormGroup>
     </StyledBox>
   );
