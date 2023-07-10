@@ -16,6 +16,7 @@ import adminApi from "api/adminApi";
 import styled from "@emotion/styled";
 import HeaderAdminPage from "../components/HeaderAdminPage";
 import CategoryAdminPage from "../components/CategoryAdminPage";
+import axiosClient from "api/axiosClient";
 
 OrderDetail.propTypes = {};
 const RootContainer = styled("div")`
@@ -63,7 +64,7 @@ function OrderDetail(props) {
             paymentMethod: x.payment_method_id,
             totalAmount: x.total_price,
             status: x.order_status,
-            name: x.full_name,
+            name: x.name,
             address: x.address,
             numberphone: x.phone_number,
           }))
@@ -96,6 +97,30 @@ function OrderDetail(props) {
       return "Khác";
     }
   }
+
+  const handleDuyetClick = async () => {
+    try {
+      let orderid = idProduct;
+      console.log(orderid);
+      const response = await axiosClient.post("/api/admin/update_order", {
+        orderid: orderid,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKhongDuyetClick = async () => {
+    try {
+      let orderid = idProduct;
+      console.log(orderid);
+      const response = await axiosClient.post("/api/admin/update_order_2", {
+        orderid: orderid,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <RootContainer>
@@ -166,10 +191,16 @@ function OrderDetail(props) {
                         variant="contained"
                         color="primary"
                         sx={{ marginRight: "20px" }}
+                        onClick={handleDuyetClick}
                       >
                         Duyệt
                       </Button>
-                      <Button variant="contained" color="primary">
+
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleKhongDuyetClick}
+                      >
                         Không duyệt
                       </Button>
                     </TableCell>

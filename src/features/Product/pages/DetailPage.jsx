@@ -187,7 +187,7 @@ function DetailPage(props) {
               {/* LEFT */}
               <StyledGridLeft item>
                 {loading && <ProductThumbnail product={detailProduct} />}
-                <DetailInfomation />
+                {loading && <DetailInfomation product={detailProduct} />}
                 <ReviewProduct handleReview={handleReviewOpen} />
               </StyledGridLeft>
               {/* RIGHT */}

@@ -88,7 +88,7 @@ function ReviewProduct({ handleReview }) {
       )}
 
       <ul>
-        <StyledLi>
+        {/* <StyledLi>
           <StyledTypography>
             <StyledName>Lương Mạnh Hùng</StyledName>
             <StyledRating
@@ -123,41 +123,7 @@ function ReviewProduct({ handleReview }) {
             struggling with or worrying about is going to be fine and that
             everyone has a fantastic day!
           </span>
-        </StyledLi>
-
-        <StyledLi>
-          <StyledTypography>
-            <StyledName>Lương Mạnh Hùng</StyledName>
-            <StyledRating
-              name="half-rating-read"
-              defaultValue={5}
-              precision={1}
-              readOnly
-            />
-          </StyledTypography>
-          <span>
-            Các mẫu thể thao của NHGB ngày càng cải thiện, giá cũng phải chăng
-            chứ k cao chót vót như mấy hàng thể thao cao cấp, khó mà mua được.
-            Mua áo kèm quần short được freeship.
-          </span>
-        </StyledLi>
-
-        <StyledLi>
-          <StyledTypography>
-            <StyledName>Lương Mạnh Hùng</StyledName>
-            <StyledRating
-              name="half-rating-read"
-              defaultValue={5}
-              precision={1}
-              readOnly
-            />
-          </StyledTypography>
-          <span>
-            Các mẫu thể thao của NHGB ngày càng cải thiện, giá cũng phải chăng
-            chứ k cao chót vót như mấy hàng thể thao cao cấp, khó mà mua được.
-            Mua áo kèm quần short được freeship.
-          </span>
-        </StyledLi>
+        </StyledLi> */}
       </ul>
     </StyledBox>
   );

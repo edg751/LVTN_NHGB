@@ -57,6 +57,14 @@ const categoryApi = {
     let url = `/api/list/size`;
     return axiosClient.get(url);
   },
+  getAllColorAdmin() {
+    let url = `/api/admin/get_all_color`;
+    return axiosClient.get(url);
+  },
+  getDetailColor(colorId) {
+    let url = `/api/admin/detail_color?color_id=${colorId}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default categoryApi;

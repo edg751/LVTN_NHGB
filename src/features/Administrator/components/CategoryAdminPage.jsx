@@ -20,6 +20,7 @@ import {
   People as PeopleIcon,
 } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+
 const StyledDrawer = styled(Drawer)`
   width: 240px;
 
@@ -30,6 +31,12 @@ const StyledDrawer = styled(Drawer)`
 const DrawerContainer = styled("div")`
   overflow: auto;
 `;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+`;
+
 function CategoryAdminPage(props) {
   return (
     <StyledDrawer variant="permanent">
@@ -43,59 +50,68 @@ function CategoryAdminPage(props) {
             <ListItemText primary="Dashboard" />
           </ListItem>
 
-          <Link to="/admin/order">
-            <ListItem button>
-              <ListItemIcon>
-                <ShoppingCartIcon />
-              </ListItemIcon>
-              <ListItemText primary="Quản lý đơn hàng" />
-            </ListItem>
-          </Link>
-
-          <Link to="/admin/productList">
+          <StyledLink to="/admin/productList">
             <ListItem button>
               <ListItemIcon>
                 <BorderColorIcon />
               </ListItemIcon>
               <ListItemText primary="Quản lý sản phẩm" />
             </ListItem>
-          </Link>
+          </StyledLink>
 
-          <Link to="/admin/categoryList">
+          <StyledLink to="/admin/categoryList">
             <ListItem button>
               <ListItemIcon>
                 <BorderColorIcon />
               </ListItemIcon>
               <ListItemText primary="Quản lý danh mục sản phẩm" />
             </ListItem>
-          </Link>
+          </StyledLink>
 
-          <Link to="/admin/styleList">
+          <StyledLink to="/admin/styleList">
             <ListItem button>
               <ListItemIcon>
                 <BorderColorIcon />
               </ListItemIcon>
               <ListItemText primary="Quản lý phong cách" />
             </ListItem>
-          </Link>
+          </StyledLink>
 
-          <Link to="/admin/materialList">
+          <StyledLink to="/admin/materialList">
             <ListItem button>
               <ListItemIcon>
                 <BorderColorIcon />
               </ListItemIcon>
               <ListItemText primary="Quản lý vật liệu" />
             </ListItem>
-          </Link>
+          </StyledLink>
 
-          <Link to="/">
+          <StyledLink to="/admin/colorList">
+            <ListItem button>
+              <ListItemIcon>
+                <BorderColorIcon />
+              </ListItemIcon>
+              <ListItemText primary="Quản lý màu sắc" />
+            </ListItem>
+          </StyledLink>
+
+          <StyledLink to="/admin/order">
+            <ListItem button>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary="Quản lý đơn hàng" />
+            </ListItem>
+          </StyledLink>
+
+          <StyledLink to="/">
             <ListItem button>
               <ListItemIcon>
                 <BorderColorIcon />
               </ListItemIcon>
               <ListItemText primary="Quản lý giao hàng" />
             </ListItem>
-          </Link>
+          </StyledLink>
 
           <ListItem button>
             <ListItemIcon>

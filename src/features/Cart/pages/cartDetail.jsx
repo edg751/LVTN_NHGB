@@ -4,8 +4,10 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
+  FormLabel,
   Grid,
   InputLabel,
   MenuItem,
@@ -47,11 +49,13 @@ function CartDetail(props) {
   const [selectedWard, setSelectedWard] = useState("");
   const [cityAndDistrict, setCityAndDistrict] = useState("");
   const [ward, setWard] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("");
+
+  const [addressUser, setAddressUser] = useState([]);
 
   const schema = yup.object().shape({});
   const form = useForm({
     defaultValues: {
-      email: "",
       address: "",
       name: "",
       numberphone: "",
@@ -68,6 +72,31 @@ function CartDetail(props) {
 
   useEffect(() => {
     fetchCities();
+  }, []);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const user_id = user.user_id;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await userApi.getAddress(user_id);
+        setAddressUser(
+          list.map((x) => ({
+            contact_info_id: x.contact_info_id,
+            city: x.city,
+            district: x.district,
+            ward: x.ward,
+            address: x.address,
+            phone_number: x.phone_number,
+            user_id: x.user_id,
+            name_info: x.name_info,
+          }))
+        );
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
   }, []);
 
   const fetchCities = async () => {
@@ -141,103 +170,151 @@ function CartDetail(props) {
 
   //Vì phải đợi để có trạng thái isSubmitting nên ta thêm async
   const handleSubmit = async (data) => {
+    console.log("Đia chi da chon", selectedAddress);
+
     // Xử lý dữ liệu người dùng sau khi bấm Đặt hàng
-    data.address += `, ${ward}, ${cityAndDistrict}`;
+    if (selectedAddress === "otherAddress") {
+      data.address += `, ${ward}, ${cityAndDistrict}`;
+    } else {
+      let inputAddress = selectedAddress;
+      const separatorIndex1 = inputAddress.lastIndexOf("-");
+      const separatorIndex2 = inputAddress.lastIndexOf(":");
+      const address = inputAddress.substring(0, separatorIndex1).trim();
+      const phoneNumber = inputAddress
+        .substring(separatorIndex1 + 1, separatorIndex2)
+        .trim();
+      const name = inputAddress.substring(separatorIndex2 + 1).trim();
+      data.address = address;
+      data.numberphone = phoneNumber;
+      data.name = name;
+    }
     console.log("huhu", data); // In ra thông tin người dùng nhập vào form
 
     try {
-      const userData = {
-        email: "", // Thêm giá trị email của người dùng
-        password: "", // Thêm giá trị password của người dùng
-        fullname: "Lam", // Thêm giá trị fullname của người dùng
-        // Các thuộc tính khác của người dùng
-      };
-
       data.totalprice = totalPrice;
       data.cartdata = cartData;
+      data.userId = user_id;
       console.log("data User:", data);
 
       const response = await axiosClient.post("/api/order", data);
-      // Xử lý dữ liệu trả về sau khi đăng ký thành công
-      console.log("User registered:", response);
     } catch (error) {
       // Xử lý lỗi nếu có
       console.error("Error registering user:", error);
     }
   };
 
+  const handleAddressChange = (event) => {
+    setSelectedAddress(event.target.value);
+  };
   return (
     <Box sx={{ marginTop: "50px", paddingBottom: "100px" }}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <StyledGridContainer container spacing={2}>
           <Grid item xs={6} md={4}>
-            <Box>
-              <Typography
-                variant="h5"
-                sx={{ textAlign: "left", paddingBottom: "15px" }}
-              >
-                {" "}
-                Thông tin giao hàng
-              </Typography>
-              <InputField
-                name="name"
-                label="Họ và tên"
-                form={form}
-              ></InputField>
+            <Typography
+              variant="h5"
+              sx={{ textAlign: "left", paddingBottom: "15px" }}
+            >
+              {" "}
+              Thông tin giao hàng
+            </Typography>
 
-              <InputField
-                name="numberphone"
-                label="Số điện thoại"
-                type="number"
-                form={form}
-              ></InputField>
-
-              <InputField
+            <FormControl
+              component="fieldset"
+              sx={{
+                marginLeft: "",
+                border: "2px solid #dbdbdb",
+                padding: "20px",
+              }}
+            >
+              <RadioGroup
+                aria-label="address"
                 name="address"
-                label="Địa chỉ"
-                form={form}
-              ></InputField>
+                value={selectedAddress}
+                onChange={handleAddressChange}
+              >
+                {addressUser.map((address, index) => (
+                  <FormControlLabel
+                    key={index}
+                    value={`${address.address}, ${address.ward}, ${address.district}, ${address.city}-${address.phone_number}:${address.name_info}`}
+                    control={<Radio />}
+                    label={
+                      <Typography sx={{ wordBreak: "break-word" }}>
+                        {`Tên người nhận : ${address.name_info} - Địa chỉ : ${address.address}, ${address.ward}, ${address.district}, ${address.city} - ${address.phone_number}`}
+                      </Typography>
+                    }
+                  />
+                ))}
+                <FormControlLabel
+                  value="otherAddress"
+                  control={<Radio />}
+                  label="Địa chỉ khác"
+                />
+              </RadioGroup>
+            </FormControl>
 
-              <StyledFormControlAddress>
-                <InputLabel>Tỉnh thành</InputLabel>
-                <Select value={selectedCity} onChange={handleCityChange}>
-                  {cities.map((city) => (
-                    <MenuItem key={city.code} value={city.code}>
-                      {city.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </StyledFormControlAddress>
+            {selectedAddress === "otherAddress" && (
+              <Box>
+                <InputField
+                  name="name"
+                  label="Họ và tên"
+                  form={form}
+                ></InputField>
 
-              <StyledFormControlAddress>
-                <InputLabel>Quận huyện</InputLabel>
-                <Select
-                  value={selectedDistrict}
-                  onChange={handleDistrictChange}
-                >
-                  {districts.map((district) => (
-                    <MenuItem key={district.code} value={district.code}>
-                      {district.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </StyledFormControlAddress>
+                <InputField
+                  name="numberphone"
+                  label="Số điện thoại"
+                  type="number"
+                  form={form}
+                ></InputField>
 
-              <StyledFormControlAddress>
-                <InputLabel>Phường xã</InputLabel>
-                <Select value={selectedWard} onChange={handleWardChange}>
-                  {wards.map((ward) => (
-                    <MenuItem
-                      key={ward.code}
-                      value={ward.name}
-                      onClick={handleWardClick}
-                    >
-                      {ward.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </StyledFormControlAddress>
-            </Box>
+                <InputField
+                  name="address"
+                  label="Địa chỉ"
+                  form={form}
+                ></InputField>
+
+                <StyledFormControlAddress>
+                  <InputLabel>Tỉnh thành</InputLabel>
+                  <Select value={selectedCity} onChange={handleCityChange}>
+                    {cities.map((city) => (
+                      <MenuItem key={city.code} value={city.code}>
+                        {city.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </StyledFormControlAddress>
+
+                <StyledFormControlAddress>
+                  <InputLabel>Quận huyện</InputLabel>
+                  <Select
+                    value={selectedDistrict}
+                    onChange={handleDistrictChange}
+                  >
+                    {districts.map((district) => (
+                      <MenuItem key={district.code} value={district.code}>
+                        {district.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </StyledFormControlAddress>
+
+                <StyledFormControlAddress>
+                  <InputLabel>Phường xã</InputLabel>
+                  <Select value={selectedWard} onChange={handleWardChange}>
+                    {wards.map((ward) => (
+                      <MenuItem
+                        key={ward.code}
+                        value={ward.name}
+                        onClick={handleWardClick}
+                      >
+                        {ward.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </StyledFormControlAddress>
+              </Box>
+            )}
           </Grid>
           <Grid item xs={6} md={4}>
             <Box>
@@ -260,6 +337,7 @@ function CartDetail(props) {
               >
                 <FormControlLabel
                   value="cod"
+                  checked={true}
                   control={<Radio />}
                   label="Thanh toán khi nhận hàng (COD)"
                 />

@@ -20,35 +20,26 @@ const RootContainer = styled("div")({
   margin: "16px",
 });
 
-const StyledTable = styled(Table)({
-  marginTop: "16px",
-});
 const ContentContainer = styled(Container)`
   flex-grow: 1;
   padding: 24px;
 `;
 
-const categories = [
-  { category_id: 1, category_name: "Category 1" },
-  { category_id: 2, category_name: "Category 2" },
-  { category_id: 3, category_name: "Category 3" },
-];
-
-const StyleList = () => {
-  const [styleList, setStyleList] = useState([]);
+const ColorList = () => {
+  const [ColorList, setColorList] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const list = await categoryApi.getAllStyleAdmin();
+        const list = await categoryApi.getAllColorAdmin();
 
-        setStyleList(
+        setColorList(
           list.map((x) => ({
-            style_id: x.style_id,
-            style_name: x.style_name,
+            color_id: x.color_id,
+            color_code: x.color_code,
+            color_name: x.color_name,
           }))
         );
-        console.log(styleList);
       } catch (error) {
         console.log("Error to fetch category API", error);
       }
@@ -66,25 +57,27 @@ const StyleList = () => {
           gutterBottom
           sx={{ marginTop: "60px" }}
         >
-          Danh sách phong cách
+          Danh sách màu
         </Typography>
-        <Link to="/admin/addStyle">
-          <Button variant="outlined">Thêm phong cách</Button>
+        <Link to="/admin/addColor">
+          <Button variant="outlined">Thêm màu</Button>
         </Link>
 
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Mã loại</TableCell>
-              <TableCell>Tên loại</TableCell>
+              <TableCell>Mã màu</TableCell>
+              <TableCell>Tên màu</TableCell>
+              <TableCell>Code màu</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {styleList.map((style) => (
-              <TableRow key={style.style_id}>
-                <TableCell>{style.style_id}</TableCell>
-                <TableCell>{style.style_name}</TableCell>
-                <Link to={`/admin/detailStyle/${style.style_id}`}>
+            {ColorList.map((color) => (
+              <TableRow key={color.color_id}>
+                <TableCell>{color.color_id}</TableCell>
+                <TableCell>{color.color_name}</TableCell>
+                <TableCell>{color.color_code}</TableCell>
+                <Link to={`/admin/detailColor/${color.color_id}`}>
                   <Button variant="outlined">Chi tiết</Button>
                 </Link>
               </TableRow>
@@ -96,4 +89,4 @@ const StyleList = () => {
   );
 };
 
-export default StyleList;
+export default ColorList;

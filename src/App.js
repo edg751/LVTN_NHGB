@@ -24,6 +24,9 @@ import DetailMaterial from "features/Administrator/material/DetailMaterial";
 import StyleList from "features/Administrator/style/StyleList";
 import AddStyle from "features/Administrator/style/AddStyle";
 import DetailStyle from "features/Administrator/style/DetailStyle";
+import ColorList from "features/Administrator/color/ColorList";
+import AddColor from "features/Administrator/color/AddColor";
+import DetailColor from "features/Administrator/color/DetailColor";
 
 function App() {
   const location = useLocation();
@@ -62,6 +65,10 @@ function App() {
         <Route path="/admin/styleList" element={<StyleList />} />
         <Route path="/admin/addStyle" element={<AddStyle />} />
         <Route path="/admin/detailStyle/:styleid" element={<DetailStyle />} />
+
+        <Route path="/admin/colorList" element={<ColorList />} />
+        <Route path="/admin/addColor" element={<AddColor />} />
+        <Route path="/admin/detailColor/:colorid" element={<DetailColor />} />
       </Routes>
 
       {!isInAdmin && <Header />}

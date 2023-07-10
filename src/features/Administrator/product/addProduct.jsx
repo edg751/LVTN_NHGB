@@ -49,7 +49,7 @@ const AddProductForm = () => {
   useEffect(() => {
     (async () => {
       try {
-        const listCategories = await categoryApi.getAllCategory();
+        const listCategories = await categoryApi.getAllCategoryAdmin();
         setCategories(
           listCategories.map((x) => ({
             id: x.category_id,
@@ -57,7 +57,7 @@ const AddProductForm = () => {
           }))
         );
 
-        const listMaterials = await categoryApi.getAllMaterial();
+        const listMaterials = await categoryApi.getAllMaterialAdmin();
         setMaterials(
           listMaterials.map((x) => ({
             id: x.material_id,
@@ -65,7 +65,7 @@ const AddProductForm = () => {
           }))
         );
 
-        const listColors = await categoryApi.getAllColor();
+        const listColors = await categoryApi.getAllColorAdmin();
         setcolorsData(
           listColors.map((x) => ({
             color_id: x.color_id,
@@ -81,7 +81,7 @@ const AddProductForm = () => {
           }))
         );
 
-        const listStyles = await categoryApi.getAllStyle();
+        const listStyles = await categoryApi.getAllStyleAdmin();
         setStyles(
           listStyles.map((x) => ({
             id: x.style_id,

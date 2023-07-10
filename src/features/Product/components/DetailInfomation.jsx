@@ -14,16 +14,12 @@ const StyledBox = styled(Box)`
 `;
 DetailInfomation.propTypes = {};
 
-function DetailInfomation(props) {
+function DetailInfomation({ product }) {
+  console.log("description", product[0].des);
   return (
     <StyledBox>
       <Typography variant="h6">Đặc tính nổi bật</Typography>
-      <span>
-        Áo thun nam thể thao, thiết kế mới nhất dành cho nam giới Chất vải mềm
-        mại, co giãn cực tốt, thấm hút mồ hôi hiệu quả. Áo phù hợp cho các hoạt
-        động thể dục thể thao, vận động hàng ngày Thiết kế hình in năng động,
-        khoẻ khoắn bảng màu basic dễ phối đồ. NHGB - Look good. Feel good.
-      </span>
+      <span>{product[0].des}</span>
     </StyledBox>
   );
 }

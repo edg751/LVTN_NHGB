@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -82,17 +82,20 @@ const StyledQuantityItem = styled(TextField)`
   width: 75px;
   margin-left: -50px;
 `;
-const handleDeleteItemInCart = () => {
-  console.log("Xóa item khỏi cart");
-};
 function CartPage(props) {
   const loggedInUser = useSelector((state) => state.user.current);
   // Nếu nó có id thì là đăng nhập rồi
 
   const isLoggin = loggedInUser && loggedInUser.user_id ? true : null;
   // console.log("isLogin: ", loggedInUser.user_id);
+  const [savedCartItems, setSavedCartItems] = useState([]);
 
-  const savedCartItems = JSON.parse(localStorage.getItem("cart"));
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    setSavedCartItems(cartItems);
+    console.log(savedCartItems);
+  }, []);
+
   const [open, setOpen] = React.useState(false);
   const totalPrice = savedCartItems.reduce(
     (total, item) => total + item.quantity * item.price,
@@ -113,6 +116,16 @@ function CartPage(props) {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const handleDeleteItemInCart = (index) => {
+    const updatedCartItems = [...savedCartItems];
+    updatedCartItems.splice(index, 1); // Xóa sản phẩm tại vị trí index trong mảng
+    setSavedCartItems(updatedCartItems); // Cập nhật state giỏ hàng
+
+    // Lưu lại giỏ hàng mới vào localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+  };
+
   return (
     <StyledCartBox>
       {/* <> GIỎ HÀNG RỖNG */}
@@ -188,8 +201,8 @@ function CartPage(props) {
                   {/*<> LIST ITEM CART */}
                   {/*  */}
                   {savedCartItems.map((item, index) => (
-                    <Box sx={{ display: "flex" }}>
-                      <Grid item xs={6} md={6} key={index}>
+                    <Box sx={{ display: "flex" }} key={index}>
+                      <Grid item xs={6} md={6}>
                         <Box>
                           <Grid container spacing={2}>
                             <Grid item xs={6} md={3}>
@@ -234,8 +247,8 @@ function CartPage(props) {
                           }).format(item.quantity * item.price)}
                         </StyledTypographyPrice>
                         <StyledDeleteIcon
-                          onClick={handleDeleteItemInCart}
-                        ></StyledDeleteIcon>
+                          onClick={() => handleDeleteItemInCart(index)}
+                        />
                       </Grid>
                     </Box>
                   ))}

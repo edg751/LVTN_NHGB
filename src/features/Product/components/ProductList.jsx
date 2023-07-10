@@ -32,7 +32,7 @@ function ProductList({
   const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const pageCount = Math.ceil(productList.length / 8);
+  const pageCount = Math.ceil(productList.length / 11);
   console.log(pageCount);
   useEffect(() => {
     (async () => {
