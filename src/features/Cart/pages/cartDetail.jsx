@@ -20,6 +20,10 @@ import { useForm, useFormState } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CartDetailItemList from "../components/cartDetailItemList";
+import userApi from "api/userApi";
+import { register } from "features/Auth/userSlice";
+import { useDispatch } from "react-redux";
+import axiosClient from "api/axiosClient";
 
 const StyledGridContainer = styled(Grid)`
   margin-left: auto;
@@ -34,6 +38,7 @@ const StyledFormControlAddress = styled(FormControl)`
 CartDetail.propTypes = {};
 
 function CartDetail(props) {
+  const [dataUser, setDataUser] = useState({});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -47,10 +52,19 @@ function CartDetail(props) {
   const form = useForm({
     defaultValues: {
       email: "",
-      password: "",
+      address: "",
+      name: "",
+      numberphone: "",
     },
     resolver: yupResolver(schema),
   });
+
+  const cartData = JSON.parse(localStorage.getItem("cart"));
+
+  const totalPrice = cartData.reduce(
+    (total, item) => total + item.quantity * item.price,
+    0
+  );
 
   useEffect(() => {
     fetchCities();
@@ -117,7 +131,7 @@ function CartDetail(props) {
       (district) => district.code === selectedDistrict
     )?.name;
     const result = `${selectedCityName}, ${selectedDistrictName}`;
-    console.log(result);
+    console.log("Địa chỉ: ", result);
     setCityAndDistrict(result);
   };
   const handleWardClick = (e) => {
@@ -126,15 +140,32 @@ function CartDetail(props) {
   };
 
   //Vì phải đợi để có trạng thái isSubmitting nên ta thêm async
-  const handleSubmit = async (values) => {
-    const { onSubmit } = props;
-    // console.log(values);
-    if (onSubmit) {
-      await onSubmit(values);
+  const handleSubmit = async (data) => {
+    // Xử lý dữ liệu người dùng sau khi bấm Đặt hàng
+    data.address += `, ${ward}, ${cityAndDistrict}`;
+    console.log("huhu", data); // In ra thông tin người dùng nhập vào form
+
+    try {
+      const userData = {
+        email: "", // Thêm giá trị email của người dùng
+        password: "", // Thêm giá trị password của người dùng
+        fullname: "Lam", // Thêm giá trị fullname của người dùng
+        // Các thuộc tính khác của người dùng
+      };
+
+      data.totalprice = totalPrice;
+      data.cartdata = cartData;
+      console.log("data User:", data);
+
+      const response = await axiosClient.post("/api/order", data);
+      // Xử lý dữ liệu trả về sau khi đăng ký thành công
+      console.log("User registered:", response);
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error("Error registering user:", error);
     }
-    // form.reset();
   };
-  const { isSubmitting } = useFormState(form);
+
   return (
     <Box sx={{ marginTop: "50px", paddingBottom: "100px" }}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -247,7 +278,7 @@ function CartDetail(props) {
             <CartDetailItemList></CartDetailItemList>
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={form.isSubmitting}
               variant="contained"
               color="primary"
               sx={{ p: "15px", marginTop: "30px" }}

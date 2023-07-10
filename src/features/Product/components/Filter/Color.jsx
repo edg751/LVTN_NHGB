@@ -20,7 +20,7 @@ function ColorSelector({ selectedColor, handleChangeColor, color }) {
           <span
             style={{
               cursor: "pointer",
-              backgroundColor: color,
+              backgroundColor: color.color_code,
               width: "17px",
               height: "17px",
               display: "inline-block",

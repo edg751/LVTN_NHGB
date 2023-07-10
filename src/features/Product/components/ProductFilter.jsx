@@ -2,41 +2,59 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Paper } from "@mui/material";
 import FilterByCategory from "./Filter/FilterByCategory";
-import FilterByPrice from "./Filter/FilterByColor";
 import styled from "@emotion/styled";
-import FilterByColor from "./Filter/FilterByPrice";
 import FilterByStyle from "./Filter/FilterByStyle";
 import FilterByMaterial from "./Filter/FilterByMaterial";
+import FilterByPrice from "./Filter/FilterByPrice";
+import FilterByColor from "./Filter/FilterByColor";
 
 ProductFilter.propTypes = {};
 const StyledPaper = styled(Paper)``;
-function ProductFilter(props) {
-  const { filters, onChange } = props;
+function ProductFilter({
+  handleCategoryChange,
+  handleColorChange,
+  handlePriceChange,
+  handleStyleChange,
+  handleMaterialChange,
+}) {
+  const handleValueStyle = (value) => {
+    console.log("STYLE", value);
+    handleStyleChange(value);
+  };
+  const handleValueMaterial = (value) => {
+    handleMaterialChange(value);
+  };
 
-  const handleFilterChange = (newCategoryId) => {};
-
-  const handlePriceChange = (values) => {};
-  const handleColorChange = (values) => {};
-  const handleStyleChange = (values) => {};
-  const handleMaterialChange = (values) => {};
-
+  const handleValueCategory = (value) => {
+    handleCategoryChange(value);
+  };
+  const handleValueColor = (value) => {
+    handleColorChange(value);
+  };
+  const handleValuePrice = (value) => {
+    handlePriceChange(value);
+  };
   return (
     <Box>
       <Paper elevation={0}>
-        <FilterByCategory onChange={handleFilterChange} />
+        <FilterByCategory handleValueCategory={handleValueCategory} />
       </Paper>
+
       <StyledPaper elevation={0}>
-        <FilterByPrice onChange={handlePriceChange} />
-      </StyledPaper>
-      <StyledPaper elevation={0}>
-        <FilterByColor onChange={handleColorChange} />
-      </StyledPaper>
-      <StyledPaper elevation={0}>
-        <FilterByStyle onChange={handleStyleChange}></FilterByStyle>
+        <FilterByPrice handleValuePrice={handleValuePrice} />
       </StyledPaper>
 
       <StyledPaper elevation={0}>
-        <FilterByMaterial onChange={handleMaterialChange}></FilterByMaterial>
+        <FilterByColor handleValueColor={handleValueColor} />
+      </StyledPaper>
+      <StyledPaper elevation={0}>
+        <FilterByStyle handleValueStyle={handleValueStyle}></FilterByStyle>
+      </StyledPaper>
+
+      <StyledPaper elevation={0}>
+        <FilterByMaterial
+          handleValueMaterial={handleValueMaterial}
+        ></FilterByMaterial>
       </StyledPaper>
     </Box>
   );

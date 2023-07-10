@@ -27,45 +27,39 @@ const StyledTypographyPrice = styled(Typography)`
   margin-top: 10px;
 `;
 function CartDetailItemList(props) {
+  const cartData = JSON.parse(localStorage.getItem("cart"));
+
+  const totalPrice = cartData.reduce(
+    (total, item) => total + item.quantity * item.price,
+    0
+  );
+
   return (
     <Box>
       <Box>
-        <StyledGridContainerItem container spacing={2}>
-          <Grid item xs={6} md={3}>
-            <Styledimg
-              src="https://bizweb.dktcdn.net/100/438/408/products/tsm5231-den-4.jpg?v=1652520442737"
-              alt=""
-            />
-            <StyledSpanQuantity>2</StyledSpanQuantity>
-          </Grid>
-          <Grid item xs={6} md={6}>
-            <StyledTypographyItemName>
-              Áo Polo Nam Cafe Tổ Ong Phối 3 Màu - Màu : Xanh - Size : S
-            </StyledTypographyItemName>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <StyledTypographyPrice>758.000đ</StyledTypographyPrice>
-          </Grid>
-        </StyledGridContainerItem>
+        {cartData.map((item, index) => (
+          <StyledGridContainerItem container spacing={2} key={index}>
+            <Grid item xs={6} md={3}>
+              <Styledimg src={item.image} alt="" />
+              <StyledSpanQuantity>{item.quantity}</StyledSpanQuantity>
+            </Grid>
+            <Grid item xs={6} md={6}>
+              <StyledTypographyItemName>
+                Tên sản phẩm : {item.name} - Màu : {item.color} - Size :{" "}
+                {item.size}
+              </StyledTypographyItemName>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <StyledTypographyPrice>
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(item.quantity * item.price)}
+              </StyledTypographyPrice>
+            </Grid>
+          </StyledGridContainerItem>
+        ))}
 
-        <StyledGridContainerItem container spacing={2}>
-          <Grid item xs={6} md={3}>
-            <Styledimg
-              src="https://bizweb.dktcdn.net/100/438/408/products/qam3127-tit-2.jpg?v=1673576976963"
-              alt=""
-            />
-            <StyledSpanQuantity>1</StyledSpanQuantity>
-          </Grid>
-          <Grid item xs={6} md={6}>
-            <StyledTypographyItemName>
-              Quần Âu Nam Cao Cấp Giữ Phom, Co Giãn Thoải Mái - Màu : Tím than -
-              Size : S
-            </StyledTypographyItemName>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <StyledTypographyPrice>758.000đ</StyledTypographyPrice>
-          </Grid>
-        </StyledGridContainerItem>
         <Grid container spacing={2}>
           <Grid item xs={6} md={8}>
             <TextField fullWidth id="outlined-required" label="Mã giảm giá" />
@@ -79,7 +73,13 @@ function CartDetailItemList(props) {
             <Typography sx={{ textAlign: "left" }}>Tạm tính</Typography>
           </Grid>
           <Grid item xs={6} md={4}>
-            <Typography>2.105.000đ</Typography>
+            <Typography>
+              {" "}
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(totalPrice)}
+            </Typography>
           </Grid>
           <Grid item xs={6} md={8}>
             <Typography sx={{ textAlign: "left" }}>Phí vận chuyển</Typography>
@@ -104,7 +104,10 @@ function CartDetailItemList(props) {
             <Typography
               sx={{ fontWeight: "600", fontSize: "18px", marginTop: "7px" }}
             >
-              2.105.000đ
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(totalPrice)}
             </Typography>
           </Grid>
         </Grid>

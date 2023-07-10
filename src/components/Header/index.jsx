@@ -31,6 +31,7 @@ const MODE = {
 
 const ButtonLink = styled(Button)`
   margin: 0 10px;
+  color: black;
   &:hover {
     background-color: white;
   }
@@ -93,6 +94,13 @@ const StyleButtonAuth = styled(Button)`
 `;
 
 export default function Header() {
+  const cartData = JSON.parse(localStorage.getItem("cart"));
+
+  let totalQuantity = 0;
+  if (cartData && Array.isArray(cartData)) {
+    totalQuantity = cartData.reduce((total, item) => total + item.quantity, 0);
+  }
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [mode, setMode] = React.useState(MODE.login);
@@ -232,30 +240,16 @@ export default function Header() {
               NHGB <FormatColorFillIcon />
             </LinkNotDecoration>
           </Typography>
+
           <Box sx={{ flexGrow: 0.1 }} />
-
-          <ButtonLink>
-            <LinkNotDecoration to="/">NAM</LinkNotDecoration>
+          <ButtonLink component={LinkNotDecoration} to="/products/0">
+            NAM
           </ButtonLink>
-
-          <ButtonLink>
-            <LinkNotDecoration to="/">NỮ</LinkNotDecoration>
+          <ButtonLink component={LinkNotDecoration} to="/products/1">
+            NỮ
           </ButtonLink>
-
-          <ButtonLink>
-            <LinkNotDecoration to="/">ÁO</LinkNotDecoration>
-          </ButtonLink>
-
-          <ButtonLink>
-            <LinkNotDecoration to="/">QUẦN</LinkNotDecoration>
-          </ButtonLink>
-
-          <ButtonLink>
-            <LinkNotDecoration to="/">ÁO KHOÁC</LinkNotDecoration>
-          </ButtonLink>
-
-          <ButtonLink>
-            <LinkNotDecoration to="/">PHỤ KIỆN</LinkNotDecoration>
+          <ButtonLink component={LinkNotDecoration} to="/phukien">
+            PHỤ KIỆN
           </ButtonLink>
           <Box sx={{ flexGrow: 1 }} />
 
@@ -276,11 +270,13 @@ export default function Header() {
             </IconButton>
 
             {/* CART */}
-            <IconButton size="large" sx={{ color: "#27006f" }}>
-              <Badge badgeContent={4} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            <Link to="/cart">
+              <IconButton size="large" sx={{ color: "#27006f" }}>
+                <Badge badgeContent={totalQuantity} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Link>
 
             {/* NOTIFY */}
             <IconButton

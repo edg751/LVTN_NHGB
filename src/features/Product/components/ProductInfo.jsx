@@ -84,18 +84,20 @@ const StyledSpanQuantityRate = styled.span`
 `;
 ProductInfo.propTypes = {};
 
-function ProductInfo({ handleSize, product }) {
-  const [selectedColor, setSelectedColor] = useState("black");
-  const [selectedSize, setSelectedSize] = useState("S");
+function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
+  const [selectedColor, setSelectedColor] = useState("");
+
+  const [selectedSize, setSelectedSize] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const handleChangeColor = (color) => {
     setSelectedColor(color);
-    console.log("Màu trong Product Detail: ", color);
+    handleGetColor(color.color_id);
   };
 
   const handleChangeSize = (size) => {
     setSelectedSize(size);
     console.log("Size trong Product Detail: ", size);
+    handleGetSize(size.size_id);
   };
 
   const handleQuantityChange = (quantity) => {
@@ -107,9 +109,26 @@ function ProductInfo({ handleSize, product }) {
   };
 
   const handleAddToCard = () => {
-    console.log(
-      `Mã sp: huhu, Màu: ${selectedColor}, Size ${selectedSize}, Số lượng ${selectedQuantity}`
-    );
+    const products = {
+      name: product[0].name,
+      id: product[0].id, // Đảm bảo rằng product[0] chính là đối tượng sản phẩm bạn muốn lưu trữ id
+      color: selectedColor.color_name,
+      color_id: selectedColor.color_id,
+      size_id: selectedSize.size_id,
+      size: selectedSize.size_name,
+      price: product[0].price,
+      quantity: parseInt(selectedQuantity, 10),
+      image: product[0].images_list[0].pic_link,
+    };
+    console.log(products);
+    let cart = [];
+    // Kiểm tra xem đã có dữ liệu trong local storage hay chưa
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      cart = JSON.parse(storedCart); // Lấy dữ liệu từ local storage nếu đã tồn tại
+    }
+    cart.push(products); // Thêm sản phẩm vào giỏ hàng
+    localStorage.setItem("cart", JSON.stringify(cart)); // Lưu giỏ hàng vào local storage
   };
   const handleAddToFavorite = () => {};
 
@@ -121,7 +140,7 @@ function ProductInfo({ handleSize, product }) {
         <StyledProductSold>Đã bán : {product[0].sold}</StyledProductSold>
         <StyledProductRating
           name="half-rating-read"
-          defaultValue={product[0].rate / product[0].total_rate}
+          defaultValue={product[0].rate}
           precision={0.5}
           readOnly
         />
@@ -137,12 +156,12 @@ function ProductInfo({ handleSize, product }) {
       </StyledProductPrice>
 
       <ColorChoose
-        color={product[0].colors}
+        product={product}
         selectedColor={selectedColor}
         handleChangeColor={handleChangeColor}
       />
       <SizeChoose
-        size={product}
+        product={product}
         selectedSize={selectedSize}
         handleChangeSize={handleChangeSize}
       />
@@ -151,6 +170,7 @@ function ProductInfo({ handleSize, product }) {
       </StyledSpanSizeHelp>
 
       <AddQuantity handleQuantityChange={handleQuantityChange} />
+
       <StyledButtonAddCard variant="contained" onClick={handleAddToCard}>
         Thêm vào giỏ hàng
       </StyledButtonAddCard>

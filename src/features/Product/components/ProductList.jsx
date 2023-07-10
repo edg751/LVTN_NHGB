@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import Product from "./Product";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Pagination } from "@mui/material";
 import productApi from "api/productApi";
+import styled from "@emotion/styled";
+import ProductSkeletonList from "../pages/ProductSkeletonList";
+const PaginationBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
 
 ProductList.propTypes = {
   data: PropTypes.array,
@@ -11,38 +19,100 @@ ProductList.propTypes = {
 ProductList.defaultProps = {
   data: [],
 };
-function ProductList(props) {
+function ProductList({
+  filterCategory,
+  filterColor,
+  filterPrice,
+  filterOrderBy,
+  filterStyle,
+  filterMaterial,
+  gender,
+}) {
+  const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const pageCount = Math.ceil(productList.length / 8);
+  console.log(pageCount);
   useEffect(() => {
     (async () => {
       try {
-        const list = await productApi.getAllProduct(0);
+        // const list = await productApi.getAllProduct(
+        //   0,
+        //   8,
+        //   currentPage,
+        //   filterCategory,
+        //   filterColor,
+        //   filterPrice,
+        //   filterOrderBy
+        // );
+        const list = await productApi.getAllProduct(
+          gender,
+          12,
+          currentPage,
+          filterCategory,
+          filterPrice,
+          filterColor,
+          filterStyle,
+          filterMaterial,
+          filterOrderBy
+        );
+        // Lấy tất cả những sp và màu sắc và hình ảnh đại diện có số lượng >0
+
         setProductList(
-          list.data.map((x) => ({
-            id: x.product_id,
+          list.map((x) => ({
+            id: x.id_product,
             name: x.product_name,
             price: x.price,
-            color: x.color,
-            image: x.image,
+            color: x.colors_list,
+            image: x.images_list,
           }))
         );
-        console.log(list);
+
+        setLoading(false);
       } catch (error) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, []);
+  }, [
+    currentPage,
+    filterCategory,
+    filterColor,
+    filterPrice,
+    filterOrderBy,
+    filterStyle,
+    filterMaterial,
+    gender,
+  ]);
+
+  const handlePaginationChange = (event, page) => {
+    setCurrentPage(page);
+  };
+  console.log("LIST SP", productList);
 
   return (
-    <Box>
-      <Grid container>
-        {productList.map((product, index) => (
-          <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-            {/* PRODUCT CARD */}
-            <Product product={product} />
-          </Grid>
-        ))}
-      </Grid>
+    <Box sx={{ marginBottom: "50px" }}>
+      {loading ? (
+        <ProductSkeletonList />
+      ) : (
+        <Grid container>
+          {productList.map((product, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+              {/* PRODUCT CARD */}
+              <Product product={product} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+
+      <PaginationBox>
+        <Pagination
+          color="primary"
+          count={pageCount}
+          page={currentPage}
+          onChange={handlePaginationChange}
+        ></Pagination>
+      </PaginationBox>
     </Box>
   );
 }

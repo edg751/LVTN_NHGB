@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import categoryApi from "api/categoriesApi";
+import { useParams } from "react-router-dom";
 
 FilterByColor.propTypes = {};
 
@@ -16,18 +17,21 @@ const StyledBox = styled(Box)`
   margin-top: 20px;
   padding: 15px;
 `;
-function FilterByColor(props) {
-  const color = { black: "black", white: "white" };
+function FilterByColor({ handleValueColor }) {
+  const { gender } = useParams();
+
   const [colorList, setColorList] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const list = await categoryApi.getAllColor(0);
+        const list = await categoryApi.getAllColor(gender);
         setColorList(
-          list.data.map((x) => ({
-            id: x.detail_id,
-            name: x.color,
+          list.map((x) => ({
+            id: x.color_id,
+            name: x.color_name,
+            code: x.color_code,
           }))
         );
         console.log(list);
@@ -35,7 +39,26 @@ function FilterByColor(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, []);
+  }, [gender]);
+
+  const handleChangeColor = (event) => {
+    const { value, checked } = event.target;
+    let updatedColors = [...selectedColors];
+
+    if (checked) {
+      // Nếu checkbox được chọn, thêm giá trị vào
+      updatedColors.push(value);
+    } else {
+      // Nếu checkbox bị hủy, loại bỏ giá trị khỏi
+      updatedColors = updatedColors.filter((color) => color !== value);
+    }
+    setSelectedColors(updatedColors);
+  };
+
+  useEffect(() => {
+    handleValueColor(selectedColors);
+  }, [selectedColors]);
+
   return (
     <StyledBox>
       <Typography variant="subtitle2">MÀU SẮC</Typography>
@@ -44,10 +67,11 @@ function FilterByColor(props) {
         {colorList.map((color) => (
           <FormControlLabel
             key={color.id}
-            onChange={null}
-            value={color.name}
             control={
               <Checkbox
+                onChange={handleChangeColor}
+                value={color.name}
+                checked={selectedColors.includes(color.name)}
                 sx={{
                   color: "black",
                   "&.Mui-checked": {

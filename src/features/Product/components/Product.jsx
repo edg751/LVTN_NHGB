@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ColorSelector from "./Filter/Color";
 
@@ -41,20 +41,27 @@ const StyledTypographyPrice = styled(Typography)`
 
 function Product(props) {
   const { product } = props;
+  const [linkImage, setLinkImage] = useState("");
 
-  //
+  useEffect(() => {
+    if (product.image && product.image.length > 0) {
+      setLinkImage(product.image[0].pic_link);
+    }
+  }, [product]);
+
   const [selectedColor, setSelectedColor] = useState("");
-  const [linkImage, setLinkImage] = useState(product.image[0].image_link);
+
   const handleChangeColor = (color) => {
-    setSelectedColor(color);
-    console.log("Màu: ", color);
+    // setSelectedColor(color);
+    console.log("Màu: ", color.color_id);
+    console.log("image", product.image);
     for (const colors of product.image) {
-      if (colors.color == color) {
-        setLinkImage(colors.image_link);
+      if (colors.color_id === color.color_id) {
+        setLinkImage(colors.pic_link);
+        console.log("Chon", colors.pic_link);
       }
     }
   };
-
   //
   const handleClick = () => {};
   return (

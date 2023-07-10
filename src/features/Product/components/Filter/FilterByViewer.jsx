@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import styled from "@emotion/styled";
 
-export default function FilterByViewer() {
+export default function FilterByViewer({ handleOrderByChange }) {
   const StyledFormControl = styled(FormControl)`
     margin-top: 10px;
     width: 150px;
@@ -21,6 +21,9 @@ export default function FilterByViewer() {
   const handleChange = (event) => {
     setFilter(event.target.value);
   };
+  React.useEffect(() => {
+    handleOrderByChange(Filter);
+  }, [Filter]);
 
   return (
     <StyledBox>
@@ -30,12 +33,15 @@ export default function FilterByViewer() {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={Filter}
+          defaultValue="default"
           label="Sắp xếp theo"
           onChange={handleChange}
         >
-          <MenuItem value={10}>Mặc định</MenuItem>
-          <MenuItem value={20}>Giá tăng dần</MenuItem>
-          <MenuItem value={30}>Mới nhất</MenuItem>
+          <MenuItem value="default">Mặc định</MenuItem>
+          <MenuItem value="priceLowToHigh">Giá tăng dần</MenuItem>
+          <MenuItem value="priceHighToLow">Giá giảm dần</MenuItem>
+          <MenuItem value="newest">Mới nhất</MenuItem>
+          <MenuItem value="bestselling">Bán chạy</MenuItem>
         </StyledSelect>
       </StyledFormControl>
     </StyledBox>

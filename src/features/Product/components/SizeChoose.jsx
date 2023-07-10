@@ -23,11 +23,11 @@ const StyledColorBox = styled.span`
 `;
 
 SizeChoose.propTypes = {};
-function SizeChoose({ selectedSize, handleChangeSize, size }) {
+function SizeChoose({ selectedSize, handleChangeSize, product }) {
   return (
     <StyledBox>
       <Typography>Kích thước :</Typography>
-      {size[0].sizes.map((size, index) => (
+      {product[0].size_list.map((size, index) => (
         <label key={index}>
           <input
             type="radio"
@@ -48,7 +48,7 @@ function SizeChoose({ selectedSize, handleChangeSize, size }) {
               opacity: size <= 0 ? "0.3" : "1",
             }}
           >
-            {size.size}
+            {size.size_name}
           </StyledColorBox>
         </label>
       ))}

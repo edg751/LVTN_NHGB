@@ -9,11 +9,11 @@ const StyledImg = styled.img`
   margin: 5px;
 `;
 function ProductThumbnail({ product }) {
-  console.log("hinh:", product[0].images);
+  console.log("hinh:", product[0].images_list);
   return (
     <Box>
-      {product[0].images.map((image, index) => (
-        <StyledImg key={index} src={image.image_link} alt="" width="48%" />
+      {product[0].images_list.map((image, index) => (
+        <StyledImg key={index} src={image.pic_link} alt="" width="48%" />
       ))}
     </Box>
   );

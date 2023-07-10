@@ -39,10 +39,10 @@ const StyledUl = styled.ul`
   }
 `;
 
-const handleChangeColor = (values) => {
-  console.log(values.target.value);
-};
-function FilterByPrice(props) {
+function FilterByPrice({ handleValuePrice }) {
+  const handleChangeColor = (values) => {
+    handleValuePrice(values.target.value);
+  };
   return (
     <StyledBox>
       <Typography variant="subtitle2">GIÁ</Typography>
@@ -57,7 +57,7 @@ function FilterByPrice(props) {
             >
               <FormControlLabel
                 onChange={handleChangeColor}
-                value="1"
+                value="lessThan100k"
                 control={<Radio style={{ color: "black" }} />}
                 label={
                   <span style={{ fontSize: "14px" }}>Nhỏ hơn 100.000đ</span>
@@ -66,7 +66,7 @@ function FilterByPrice(props) {
               />
               <FormControlLabel
                 onChange={handleChangeColor}
-                value="2"
+                value="100kTo250k"
                 control={<Radio style={{ color: "black" }} />}
                 label={
                   <span style={{ fontSize: "14px" }}>
@@ -77,7 +77,7 @@ function FilterByPrice(props) {
               />
               <FormControlLabel
                 onChange={handleChangeColor}
-                value="3"
+                value="250kTo500k"
                 control={<Radio style={{ color: "black" }} />}
                 label={
                   <span style={{ fontSize: "14px" }}>
@@ -88,7 +88,7 @@ function FilterByPrice(props) {
 
               <FormControlLabel
                 onChange={handleChangeColor}
-                value="4"
+                value="greaterThan500k"
                 control={<Radio style={{ color: "black" }} />}
                 label={<span style={{ fontSize: "14px" }}>Trên 500.000đ</span>}
               />

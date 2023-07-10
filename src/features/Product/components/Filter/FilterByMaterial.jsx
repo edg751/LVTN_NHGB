@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import categoryApi from "api/categoriesApi";
+import { useParams } from "react-router-dom";
 
 FilterByMaterial.propTypes = {};
 
@@ -19,14 +20,18 @@ const StyledBox = styled(Box)`
 const changeMaterial = (e) => {
   console.log(e.target.value);
 };
-function FilterByMaterial(props) {
+function FilterByMaterial({ handleValueMaterial }) {
+  const [selectedMaterial, setSelectedCategories] = useState([]);
+
+  const { gender } = useParams();
+
   const [materialList, setMaterialList] = useState([]);
   useEffect(() => {
     (async () => {
       try {
-        const list = await categoryApi.getAllMaterial(0);
+        const list = await categoryApi.getAllMaterial(gender);
         setMaterialList(
-          list.data.map((x) => ({
+          list.map((x) => ({
             id: x.material_id,
             name: x.material_name,
           }))
@@ -36,7 +41,28 @@ function FilterByMaterial(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, []);
+  }, [gender]);
+
+  const handleChangeMaterial = (event) => {
+    const { value, checked } = event.target;
+    let updatedMaterial = [...selectedMaterial];
+
+    if (checked) {
+      // Nếu checkbox được chọn, thêm giá trị vào selectedCategories
+      updatedMaterial.push(value);
+    } else {
+      // Nếu checkbox bị hủy, loại bỏ giá trị khỏi selectedCategories
+      updatedMaterial = updatedMaterial.filter(
+        (category) => category !== value
+      );
+    }
+    setSelectedCategories(updatedMaterial);
+  };
+
+  useEffect(() => {
+    handleValueMaterial(selectedMaterial);
+  }, [selectedMaterial]);
+
   return (
     <StyledBox>
       <Typography variant="subtitle2">LOẠI VẢI</Typography>
@@ -44,7 +70,7 @@ function FilterByMaterial(props) {
         {materialList.map((material) => (
           <FormControlLabel
             key={material.id}
-            onChange={changeMaterial}
+            onChange={handleChangeMaterial}
             value={material.name}
             control={
               <Checkbox

@@ -42,23 +42,28 @@ function DetailPage(props) {
 
   const [detailProduct, setDetailProduct] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [color, setColor] = useState();
+  const [size, setSize] = useState();
+
   useEffect(() => {
     (async () => {
       try {
-        const list = await productApi.getProductDetail(idProduct);
+        const list = await productApi.getProductDetail(idProduct, color);
+        console.log("day la ma color", color);
         setDetailProduct(
-          list.data.map((x) => ({
-            id: x.product_id,
+          list.map((x) => ({
+            id: x.id_product,
             name: x.product_name,
             sold: x.sold_quantity,
             price: x.price,
             des: x.product_description,
-            total_rate: x.total_rate,
-            rate: x.rate,
-            size_color: x.size_color,
-            images: x.image,
-            colors: x.color,
-            sizes: x.size,
+            total_rate: x.count_rating,
+            rate: x.rating,
+            images_list: x.images_list,
+            colors_list: x.colors_list,
+            size_list: x.size_list,
+            // colors: x.color,
+            // sizes: x.size,
           }))
         );
         setLoading(true); // Đánh dấu dữ liệu đã được tải xong
@@ -66,9 +71,8 @@ function DetailPage(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, []);
+  }, [color]);
 
-  console.log("huhu", detailProduct);
   const [open, setOpen] = React.useState(false);
   const [openReview, setOpenReview] = React.useState(false);
   const [inputReview, setInputReview] = useState("");
@@ -100,6 +104,16 @@ function DetailPage(props) {
     }
 
     setInputReview(inputValue);
+  };
+
+  const handleGetColor = (value) => {
+    console.log("Màu trong Product Detail ahuhu: ", value);
+    setColor(value);
+  };
+
+  const handleGetSize = (value) => {
+    console.log("Size trong Product Detail ahuhu: ", value);
+    setSize(value);
   };
   return (
     <div>
@@ -181,10 +195,12 @@ function DetailPage(props) {
                 {loading && (
                   <ProductInfo
                     product={detailProduct}
+                    handleGetColor={handleGetColor}
+                    handleGetSize={handleGetSize}
                     handleSize={handleSize}
                   />
                 )}
-                {/*                <AddToCardForm onSubmit={handleAddToCartSubmit} /> */}
+                {/* <AddToCardForm onSubmit={handleAddToCartSubmit} /> */}
               </StyledGridRight>
             </Grid>
           </Paper>

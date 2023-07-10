@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import categoryApi from "api/categoriesApi";
+import { useParams } from "react-router-dom";
 
 FilterByStyle.propTypes = {};
 
@@ -16,17 +17,18 @@ const StyledBox = styled(Box)`
   margin-top: 20px;
   padding: 15px;
 `;
-const changeStyle = (e) => {
-  console.log(e.target.value);
-};
-function FilterByStyle(props) {
+
+function FilterByStyle({ handleValueStyle }) {
+  const { gender } = useParams();
   const [styleList, setStyleList] = useState([]);
+  const [selectedStyle, setSelectedStyle] = useState([]);
+
   useEffect(() => {
     (async () => {
       try {
-        const list = await categoryApi.getAllStyle(0);
+        const list = await categoryApi.getAllStyle(gender);
         setStyleList(
-          list.data.map((x) => ({
+          list.map((x) => ({
             id: x.style_id,
             name: x.style_name,
           }))
@@ -36,7 +38,24 @@ function FilterByStyle(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, []);
+  }, [gender]);
+
+  const handleChangeStyle = (event) => {
+    const { value, checked } = event.target;
+    let updatedStyle = [...selectedStyle];
+
+    if (checked) {
+      updatedStyle.push(value);
+    } else {
+      updatedStyle = updatedStyle.filter((category) => category !== value);
+    }
+    setSelectedStyle(updatedStyle);
+  };
+
+  useEffect(() => {
+    handleValueStyle(selectedStyle);
+  }, [selectedStyle]);
+
   return (
     <StyledBox>
       <Typography variant="subtitle2">PHONG CÁCH</Typography>
@@ -45,7 +64,7 @@ function FilterByStyle(props) {
         {styleList.map((style) => (
           <FormControlLabel
             key={style.id}
-            onChange={changeStyle}
+            onChange={handleChangeStyle}
             value={style.name}
             control={
               <Checkbox
