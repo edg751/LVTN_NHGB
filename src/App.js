@@ -9,7 +9,7 @@ import CartPage from "features/Cart/pages/cartPage";
 
 import CartDetail from "features/Cart/pages/cartDetail";
 import AdminDashboard from "features/Administrator/AdminDashboard";
-import { useState } from "react";
+import React, { useState } from "react";
 import OrderDetail from "features/Administrator/order/OrderDetail";
 import OderList from "features/Administrator/order/OderList";
 import AddProductForm from "features/Administrator/product/addProduct";
@@ -27,19 +27,39 @@ import DetailStyle from "features/Administrator/style/DetailStyle";
 import ColorList from "features/Administrator/color/ColorList";
 import AddColor from "features/Administrator/color/AddColor";
 import DetailColor from "features/Administrator/color/DetailColor";
+import DeliveryDetail from "features/Administrator/delivery/DeliveryDetail";
+import DeliveryList from "features/Administrator/delivery/DeliveryList";
+import FavoriteProductList from "features/Product/components/FavoriteProductList";
+import PasswordForm from "features/Auth/components/ResetPassForm/PasswordForm";
+import LoginAdministrator from "features/Administrator/login/LoginAdministrator";
+import UpdateProduct from "features/Administrator/product/updateProduct";
+import { Box } from "@mui/material";
+import AddressProfile from "features/Auth/components/Profile/AddressProfile";
 
 function App() {
   const location = useLocation();
   const [isInAdmin, setIsInAdmin] = useState(
     location.pathname.startsWith("/admin")
   );
+  const handleSearch = (value) => {
+    console.log("Search: ", value);
+    setSearchValue(value);
+  };
+  const [searchValue, setSearchValue] = React.useState("");
 
   return (
     <div className="App">
       <Routes>
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/login" element={<LoginAdministrator />} />
+
         <Route path="/admin/ProductList" element={<ProductList />} />
         <Route path="/admin/addProduct" element={<AddProductForm />} />
+        <Route
+          path="/admin/updateProduct/:productid"
+          element={<UpdateProduct />}
+        />
+
         <Route
           path="/admin/productDetail/:productid"
           element={<DetailProductForm />}
@@ -47,6 +67,12 @@ function App() {
 
         <Route path="/admin/oderdetail/:orderid" element={<OrderDetail />} />
         <Route path="/admin/order" element={<OderList />} />
+
+        <Route
+          path="/admin/deliverydetail/:deliveryid"
+          element={<DeliveryDetail />}
+        />
+        <Route path="/admin/delivery" element={<DeliveryList />} />
 
         <Route path="/admin/categoryList" element={<CategoryList />} />
         <Route path="/admin/addCategory" element={<AddCategory />} />
@@ -71,13 +97,21 @@ function App() {
         <Route path="/admin/detailColor/:colorid" element={<DetailColor />} />
       </Routes>
 
-      {!isInAdmin && <Header />}
+      {!isInAdmin && <Header handleSearch={handleSearch} />}
 
       <Routes>
-        <Route path="/products/:gender" element={<ListPage />} />
+        <Route
+          path="/products/:gender"
+          element={<ListPage searchValue={searchValue} />}
+        />
         <Route path="/products/:gender/:productId" element={<DetailPage />} />
+        <Route path="/favorite" element={<FavoriteProductList />} />
+
         <Route path="/cart" element={<CartPage />} />
         <Route path="/cart/detail" element={<CartDetail />} />
+        <Route path="/resetPassword/:token" element={<PasswordForm />} />
+
+        <Route path="/profile" element={<AddressProfile />} />
       </Routes>
 
       {!isInAdmin && <Bottom />}

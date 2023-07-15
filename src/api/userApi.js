@@ -13,6 +13,10 @@ const userApi = {
     let url = `/api/user/address?user_id=${userId}`;
     return axiosClient.get(url);
   },
+  getFavoriteList(userId) {
+    let url = `/api/user/favorite?user_id=${userId}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default userApi;

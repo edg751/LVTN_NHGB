@@ -29,7 +29,6 @@ axiosClient.interceptors.response.use(
     if (URLs.includes(config.url) && status === 401) {
       // Kiểm tra đường dẫn và mã trạng thái để xác định loại lỗi.
       const errorList = data.message || []; // Danh sách lỗi.
-      // console.log("data: ", errorList);
       throw new Error(errorList); // Ném ra một lỗi mới với thông báo lỗi đầu tiên.
     }
     return Promise.reject(error); // Trả về một promise bị từ chối với lượng error, để cho các interceptor tiếp theo hoặc phía gọi API có thể xử lý.

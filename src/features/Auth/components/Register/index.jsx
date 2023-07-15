@@ -21,7 +21,9 @@ function Register(props) {
         closeDialog();
       }
       //Thông báo thành công
-      enqueueSnackbar("Đăng ký tài khoản thành công !", { variant: "success" });
+      enqueueSnackbar("Vui lòng kiểm tra email để xác thực tài khoản !", {
+        variant: "success",
+      });
     } catch (error) {
       enqueueSnackbar(error.message, { variant: "error" });
     }

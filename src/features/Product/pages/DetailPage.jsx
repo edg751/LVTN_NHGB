@@ -25,6 +25,8 @@ import ProductThumbnail from "../components/ProductThumbnail";
 import DetailInfomation from "../components/DetailInfomation";
 import ReviewProduct from "../components/ReviewProduct";
 import productApi from "api/productApi";
+import axiosClient from "api/axiosClient";
+import { useSelector } from "react-redux";
 DetailPage.propTypes = {};
 const StyledGridLeft = styled(Grid)`
   width: 700px;
@@ -44,6 +46,7 @@ function DetailPage(props) {
   const [loading, setLoading] = useState(false);
   const [color, setColor] = useState();
   const [size, setSize] = useState();
+  const [statusFlag, setStatusFlag] = useState();
 
   useEffect(() => {
     (async () => {
@@ -71,12 +74,13 @@ function DetailPage(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, [color]);
+  }, [color, statusFlag]);
 
   const [open, setOpen] = React.useState(false);
   const [openReview, setOpenReview] = React.useState(false);
   const [inputReview, setInputReview] = useState("");
   const [ratingValue, setRatingValue] = useState(5);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -89,9 +93,30 @@ function DetailPage(props) {
   const handleReviewOpen = () => {
     setOpenReview(true);
   };
-  const handleSubmit = () => {
-    console.log("Nội dung đánh giá:", inputReview, ", Điểm :", ratingValue);
-    setOpenReview(false);
+  const loggedInUser = useSelector((state) => state.user.current);
+  // Nếu nó có id thì là đăng nhập rồi
+
+  const handleSubmit = async () => {
+    try {
+      console.log(
+        "Nội dung đánh giá:",
+        inputReview,
+        ", Điểm :",
+        ratingValue,
+        "Id: ",
+        idProduct
+      );
+      let data = {};
+      data.star = ratingValue;
+      data.productid = idProduct;
+      data.comment = inputReview;
+      data.userid = loggedInUser.user_id;
+
+      setOpenReview(false);
+
+      const response = await axiosClient.post("/api/postReview", data);
+      setStatusFlag(Date.now());
+    } catch {}
   };
   const handleRating = (event, newValue) => {
     setRatingValue(newValue);
@@ -115,6 +140,7 @@ function DetailPage(props) {
     console.log("Size trong Product Detail ahuhu: ", value);
     setSize(value);
   };
+
   return (
     <div>
       <Box>
@@ -188,7 +214,10 @@ function DetailPage(props) {
               <StyledGridLeft item>
                 {loading && <ProductThumbnail product={detailProduct} />}
                 {loading && <DetailInfomation product={detailProduct} />}
-                <ReviewProduct handleReview={handleReviewOpen} />
+                <ReviewProduct
+                  handleReview={handleReviewOpen}
+                  statusFlag={statusFlag}
+                />
               </StyledGridLeft>
               {/* RIGHT */}
               <StyledGridRight item>

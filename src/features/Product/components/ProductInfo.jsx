@@ -8,8 +8,10 @@ import ColorChoose from "./ColorChoose";
 import SizeChoose from "./SizeChoose";
 import AddToCard from "./AddQuantity";
 import AddQuantity from "./AddQuantity";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import productApi from "api/productApi";
+import { useSelector } from "react-redux";
+import axiosClient from "api/axiosClient";
 
 const StyledSpanSizeHelp = styled.p`
   margin-left: 10px;
@@ -37,6 +39,18 @@ const StyledButtonAddFavorite = styled(Button)`
   width: 96%;
   height: 40px;
   background-color: #27006f;
+  color: white;
+  margin-top: 15px;
+
+  &:hover {
+    background-color: #1e0252;
+  }
+`;
+
+const StyledButtonRemoveFavorite = styled(Button)`
+  width: 96%;
+  height: 40px;
+  background-color: #ce3434;
   color: white;
   margin-top: 15px;
 
@@ -85,10 +99,16 @@ const StyledSpanQuantityRate = styled.span`
 ProductInfo.propTypes = {};
 
 function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
+  const location = useLocation();
+  const idProduct = location.pathname.split("/").pop();
+
   const [selectedColor, setSelectedColor] = useState("");
 
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [statusFavorite, setStatusFavorite] = useState([]);
+  const [statusFlag, setStatusFlag] = useState();
+
   const handleChangeColor = (color) => {
     setSelectedColor(color);
     handleGetColor(color.color_id);
@@ -130,7 +150,61 @@ function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
     cart.push(products); // Thêm sản phẩm vào giỏ hàng
     localStorage.setItem("cart", JSON.stringify(cart)); // Lưu giỏ hàng vào local storage
   };
-  const handleAddToFavorite = () => {};
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await productApi.getStatusFavorite(
+          loggedInUser.user_id,
+          idProduct
+        );
+        setStatusFavorite(
+          list.map((x) => ({
+            wish_list_id: x.wish_list_id,
+            user_id: x.user_id,
+            id_product: x.id_product,
+          }))
+        );
+        console.log("list", list);
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, [statusFlag]);
+
+  const handleAddToFavorite = async () => {
+    console.log("id pd", idProduct);
+    console.log("id user", loggedInUser.user_id);
+    let data = {};
+    data.idProduct = idProduct;
+    data.user_id = loggedInUser.user_id;
+    try {
+      const response = await axiosClient.post("/api/addFavorite", data);
+      setStatusFlag(Date.now());
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const handleRemoveFavorite = async () => {
+    console.log("id pd", idProduct);
+    console.log("id user", loggedInUser.user_id);
+    let data = {};
+    data.idProduct = idProduct;
+    data.user_id = loggedInUser.user_id;
+
+    try {
+      const response = await axiosClient.post("/api/removeFavorite", data);
+      setStatusFlag(Date.now());
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const loggedInUser = useSelector((state) => state.user.current);
+  // Nếu nó có id thì là đăng nhập rồi
+
+  const isLoggin = loggedInUser && loggedInUser.user_id ? true : null;
+  console.log("length: ", statusFavorite.length);
 
   return (
     <Box>
@@ -175,12 +249,34 @@ function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
         Thêm vào giỏ hàng
       </StyledButtonAddCard>
 
-      <StyledButtonAddFavorite
-        variant="contained"
-        onClick={handleAddToFavorite}
-      >
-        Thêm vào danh sách yêu thích
-      </StyledButtonAddFavorite>
+      {isLoggin && statusFavorite.length === 0 && (
+        <StyledButtonAddFavorite
+          variant="contained"
+          onClick={handleAddToFavorite}
+        >
+          Thêm vào danh sách yêu thích
+        </StyledButtonAddFavorite>
+      )}
+
+      {isLoggin && statusFavorite.length !== 0 && (
+        <StyledButtonRemoveFavorite
+          variant="contained"
+          onClick={handleRemoveFavorite}
+        >
+          Bỏ khỏi danh sách yêu thích
+        </StyledButtonRemoveFavorite>
+      )}
+
+      {!isLoggin && (
+        <StyledButtonAddFavorite
+          variant="contained"
+          onClick={handleAddToFavorite}
+          disabled
+        >
+          Thêm vào danh sách yêu thích
+        </StyledButtonAddFavorite>
+      )}
+
       <img src="https://baonguyen.online/LVTN/service.png" alt="" />
     </Box>
   );

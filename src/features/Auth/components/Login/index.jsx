@@ -28,7 +28,11 @@ function Login(props) {
         closeDialog();
       }
     } catch (error) {
-      enqueueSnackbar(error.message, { variant: "error" });
+      console.log(error);
+      enqueueSnackbar(
+        "Sai tài khoản hoặc mật khẩu, hoặc tài khoản chưa được kích hoạt !",
+        { variant: "error" }
+      );
     }
   };
 

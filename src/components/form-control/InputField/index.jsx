@@ -20,7 +20,7 @@ function InputField(props) {
       name={name}
       control={control}
       render={({
-        field: { onChange, onBlur, value, name },
+        field: { onChange, onBlur, value, name, defaultValue },
         fieldState: { invalid, error },
       }) => (
         <TextField
@@ -35,6 +35,8 @@ function InputField(props) {
           name={name}
           value={value}
           disabled={disable}
+          required
+          defaultValue={defaultValue}
         />
       )}
     ></Controller>

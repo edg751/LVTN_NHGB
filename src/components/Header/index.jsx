@@ -24,9 +24,11 @@ import { logout } from "features/Auth/userSlice";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import ResetPassForm from "features/Auth/components/ResetPassForm";
 const MODE = {
   login: "login",
   register: "register",
+  resetpass: "resetpass",
 };
 
 const ButtonLink = styled(Button)`
@@ -93,7 +95,7 @@ const StyleButtonAuth = styled(Button)`
   }
 `;
 
-export default function Header() {
+export default function Header({ handleSearch }) {
   const cartData = JSON.parse(localStorage.getItem("cart"));
 
   let totalQuantity = 0;
@@ -116,6 +118,18 @@ export default function Header() {
   // console.log("isLogin: ", loggedInUser.user_id);
 
   const [open, setOpen] = React.useState(false);
+
+  const [searchValue, setSearchValue] = React.useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    // console.log("Search value:", searchValue);
+    handleSearch(searchValue);
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -167,9 +181,8 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Tài khoản</MenuItem>
+      <MenuItem onClick={handleLogOut}>Đăng xuất</MenuItem>
     </Menu>
   );
 
@@ -252,22 +265,27 @@ export default function Header() {
             PHỤ KIỆN
           </ButtonLink>
           <Box sx={{ flexGrow: 1 }} />
-
-          <Search>
-            <SearchIconWrapper sx={{ color: "#27006f" }}>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              sx={{ color: "#27006f" }}
-            />
-          </Search>
+          <form onSubmit={handleSearchSubmit}>
+            <Search>
+              <SearchIconWrapper sx={{ color: "#27006f" }}>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                sx={{ color: "#27006f" }}
+                value={searchValue}
+                onChange={handleSearchChange}
+              />
+            </Search>
+          </form>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {/* WISH */}
-            <IconButton size="large" sx={{ color: "#27006f" }}>
-              <FavoriteIcon />
-            </IconButton>
+            <Link to="/favorite">
+              <IconButton size="large" sx={{ color: "#27006f" }}>
+                <FavoriteIcon />
+              </IconButton>
+            </Link>
 
             {/* CART */}
             <Link to="/cart">
@@ -279,15 +297,15 @@ export default function Header() {
             </Link>
 
             {/* NOTIFY */}
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="show 17 new notifications"
               sx={{ color: "#27006f" }}
             >
-              <Badge badgeContent={1} color="error">
+              <Badge badgeContent={0} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
 
             {isLoggin && (
               <>
@@ -342,6 +360,10 @@ export default function Header() {
                 <Button onClick={() => setMode(MODE.register)}>
                   Chưa có tài khoản ? Đăng ký ngay.
                 </Button>
+                <br></br>
+                <Button onClick={() => setMode(MODE.resetpass)}>
+                  Quên mật khẩu
+                </Button>
               </Box>
             </>
           )}
@@ -349,6 +371,21 @@ export default function Header() {
           {mode == MODE.register && (
             <>
               <Register closeDialog={handleClose} />
+              <Box textAlign="center" mt={"10px"}>
+                <Button onClick={() => setMode(MODE.login)}>
+                  Đã có tài khoản ? Đăng nhập ngay.
+                </Button>
+                <br></br>
+                <Button onClick={() => setMode(MODE.resetpass)}>
+                  Quên mật khẩu
+                </Button>
+              </Box>
+            </>
+          )}
+
+          {mode == MODE.resetpass && (
+            <>
+              <ResetPassForm closeDialog={handleClose} />
               <Box textAlign="center" mt={"10px"}>
                 <Button onClick={() => setMode(MODE.login)}>
                   Đã có tài khoản ? Đăng nhập ngay.

@@ -194,7 +194,7 @@ const AddProductForm = () => {
               form={form}
             ></InputField>
 
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ marginTop: "15px" }}>
               <InputLabel>Giới tính</InputLabel>
               <Select
                 value={gender}
@@ -207,7 +207,7 @@ const AddProductForm = () => {
               </Select>
             </FormControl>
 
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ marginTop: "20px" }}>
               <InputLabel>Loại sản phẩm</InputLabel>
               <Select
                 value={category}
@@ -222,7 +222,7 @@ const AddProductForm = () => {
               </Select>
             </FormControl>
 
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ marginTop: "20px" }}>
               <InputLabel>Vật liệu</InputLabel>
               <Select
                 value={material}
@@ -237,7 +237,7 @@ const AddProductForm = () => {
               </Select>
             </FormControl>
 
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ marginTop: "20px" }}>
               <InputLabel>Phong cách</InputLabel>
               <Select
                 value={style}
@@ -252,8 +252,8 @@ const AddProductForm = () => {
               </Select>
             </FormControl>
 
-            <Box>
-              <Typography>Màu sắc</Typography>
+            <Box sx={{ marginTop: "20px" }}>
+              <Typography sx={{ fontWeight: "bold" }}>Màu sắc</Typography>
               <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
                 {colorsData.map((color) => (
                   <FormControlLabel
@@ -270,7 +270,7 @@ const AddProductForm = () => {
               </FormGroup>
             </Box>
 
-            <Typography>Size</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>Size</Typography>
             <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
               {sizeData.map((size) => (
                 <FormControlLabel
@@ -292,7 +292,7 @@ const AddProductForm = () => {
               sx={{ p: "15px", marginTop: "30px" }}
               fullWidth
             >
-              Đặt hàng
+              Thêm sản phẩm
             </Button>
           </form>
         </Container>

@@ -23,34 +23,6 @@ const DetailProductForm = () => {
   const [productDetail, setProductDetail] = useState([]);
   const [imageDetail, setImageDetail] = useState([]);
 
-  // DATA
-  // const pictures = [
-  //   {
-  //     color_id: 1,
-  //     color_name: "Đỏ",
-  //     pic_id: 1,
-  //     pic_link: "https://example.com/red.jpg",
-  //   },
-  //   {
-  //     color_id: 1,
-  //     color_name: "Đỏ",
-  //     pic_id: 2,
-  //     pic_link: "https://example.com/red2.jpg",
-  //   },
-  //   {
-  //     color_id: 2,
-  //     color_name: "Xanh",
-  //     pic_id: 3,
-  //     pic_link: "https://example.com/blue.jpg",
-  //   },
-  //   {
-  //     color_id: 2,
-  //     color_name: "Xanh",
-  //     pic_id: 4,
-  //     pic_link: "https://example.com/blue2.jpg",
-  //   },
-  // ];
-
   useEffect(() => {
     (async () => {
       try {
@@ -136,9 +108,9 @@ const DetailProductForm = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Color Name</TableCell>
-              <TableCell>Size Name</TableCell>
-              <TableCell>Quantity</TableCell>
+              <TableCell>Tên màu</TableCell>
+              <TableCell>Tên size</TableCell>
+              <TableCell>Số lượng</TableCell>
             </TableRow>
           </TableHead>
 
@@ -193,7 +165,7 @@ const DetailProductForm = () => {
         </Table>
       </TableContainer>
       <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Submit
+        Cập nhật
       </Button>
     </div>
   );

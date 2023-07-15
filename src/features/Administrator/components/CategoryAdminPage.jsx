@@ -104,7 +104,7 @@ function CategoryAdminPage(props) {
             </ListItem>
           </StyledLink>
 
-          <StyledLink to="/">
+          <StyledLink to="/admin/delivery">
             <ListItem button>
               <ListItemIcon>
                 <BorderColorIcon />

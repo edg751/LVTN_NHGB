@@ -47,8 +47,7 @@ function ProductList() {
     })();
   }, []);
   const handleEdit = (productId) => {
-    // Xử lý sự kiện chỉnh sửa sản phẩm
-    navigate(`/admin/productDetail/${productId}`);
+    navigate(`/admin/updateProduct/${productId}`);
   };
 
   return (

@@ -26,6 +26,7 @@ import userApi from "api/userApi";
 import { register } from "features/Auth/userSlice";
 import { useDispatch } from "react-redux";
 import axiosClient from "api/axiosClient";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const StyledGridContainer = styled(Grid)`
   margin-left: auto;
@@ -50,7 +51,7 @@ function CartDetail(props) {
   const [cityAndDistrict, setCityAndDistrict] = useState("");
   const [ward, setWard] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
-
+  const navigate = useNavigate();
   const [addressUser, setAddressUser] = useState([]);
 
   const schema = yup.object().shape({});
@@ -109,6 +110,19 @@ function CartDetail(props) {
       console.error(error);
     }
   };
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await axios.get(
+          "https://provinces.open-api.vn/api/?depth=1"
+        );
+
+        setCities(list.data);
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
 
   const fetchDistricts = async (cityCode) => {
     try {
@@ -188,7 +202,6 @@ function CartDetail(props) {
       data.numberphone = phoneNumber;
       data.name = name;
     }
-    console.log("huhu", data); // In ra thông tin người dùng nhập vào form
 
     try {
       data.totalprice = totalPrice;
@@ -197,6 +210,8 @@ function CartDetail(props) {
       console.log("data User:", data);
 
       const response = await axiosClient.post("/api/order", data);
+      localStorage.removeItem("cart");
+      navigate("/");
     } catch (error) {
       // Xử lý lỗi nếu có
       console.error("Error registering user:", error);

@@ -1,27 +1,4 @@
 import axiosClient from "./axiosClient";
-// const productApi = {
-//   getAllProduct(gender, pageSize, page, categories, colors, price, orderBy) {
-//     let url = `/api/all_item?gender=${gender}&pageSize=${pageSize}&page=${page}`;
-
-//     if (categories && categories.length > 0) {
-//       const categoryString = categories.join("&category=");
-//       url += `&category=${categoryString}`;
-//     }
-
-//     if (colors && colors.length > 0) {
-//       const colorsString = colors.join("&color=");
-//       url += `&color=${colorsString}`;
-//     }
-//     if (price && price.length > 0) {
-//       url += `&price=${price}`;
-//     }
-//     if (orderBy && orderBy.length > 0) {
-//       url += `&orderBy=${orderBy}`;
-//     }
-
-//     console.log("url", url);
-//     return axiosClient.get(url);
-//   },
 const productApi = {
   getAllProduct(
     gender,
@@ -32,7 +9,8 @@ const productApi = {
     colors,
     styles,
     materials,
-    orderBy
+    orderBy,
+    searchValue
   ) {
     let url = `/api/list/products?gender=${gender}&pageSize=${pageSize}&page=${page}`;
 
@@ -60,6 +38,10 @@ const productApi = {
       url += `&style=${stylesString}`;
     }
 
+    if (searchValue) {
+      url += `&search=${searchValue}`;
+    }
+
     if (orderBy && orderBy.length > 0) {
       url += `&orderby=${orderBy}`;
     }
@@ -72,7 +54,11 @@ const productApi = {
     if (color) {
       url += `&color=${color}`;
     }
+    return axiosClient.get(url);
+  },
 
+  getProductDetailUpdate(productId) {
+    let url = `/api/admin/detail_update?productid=${productId}`;
     return axiosClient.get(url);
   },
 
@@ -86,6 +72,19 @@ const productApi = {
   },
   getProductLinkAdmin(productid) {
     const url = `/api/admin/product_link_image?productid=${productid}`;
+    return axiosClient.get(url);
+  },
+  getStatusFavorite(productid, userid) {
+    const url = `/api/getFavorite?productid=${productid}&userid=${userid}`;
+    return axiosClient.get(url);
+  },
+  getStatusReview(productid, userid) {
+    const url = `/api/getReview?productid=${productid}&userid=${userid}`;
+    console.log(`url`, url);
+    return axiosClient.get(url);
+  },
+  getReviewList(productid) {
+    const url = `/api/getComment?productid=${productid}`;
     return axiosClient.get(url);
   },
 };

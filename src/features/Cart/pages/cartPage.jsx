@@ -125,11 +125,26 @@ function CartPage(props) {
     // Lưu lại giỏ hàng mới vào localStorage
     localStorage.setItem("cart", JSON.stringify(updatedCartItems));
   };
+  const handleQuantityChange = (event, index) => {
+    const newQuantity = parseInt(event.target.value);
+
+    if (newQuantity > 0 && newQuantity <= 99) {
+      const savedCartItems = JSON.parse(localStorage.getItem("cart"));
+      savedCartItems[index].quantity = newQuantity;
+
+      localStorage.setItem("cart", JSON.stringify(savedCartItems));
+      setSavedCartItems(savedCartItems); // Cập nhật state giỏ hàng
+    } else {
+      // Nếu giá trị không nằm trong khoảng từ 1 đến 99, cập nhật lại trường số lượng với giá trị mặc định
+      const defaultValue = savedCartItems[index].quantity;
+      event.target.value = defaultValue;
+    }
+  };
 
   return (
     <StyledCartBox>
       {/* <> GIỎ HÀNG RỖNG */}
-      {!savedCartItems && (
+      {savedCartItems.length === 0 && (
         <Box sx={{ paddingTop: "100px" }}>
           <RemoveShoppingCartIcon
             sx={{ fontSize: "100px", color: "#7a7a9d" }}
@@ -154,7 +169,7 @@ function CartPage(props) {
       )}
       {/* GIỎ HÀNG RỖNG </> */}
 
-      {savedCartItems && (
+      {savedCartItems.length !== 0 && (
         <StyeldGridCart container spacing={2}>
           <Grid item xs={12} md={8}>
             <Box>
@@ -237,8 +252,12 @@ function CartPage(props) {
                           id="outlined-number"
                           type="number"
                           defaultValue={item.quantity}
+                          onChange={(event) =>
+                            handleQuantityChange(event, index)
+                          }
                         />
                       </Grid>
+
                       <Grid item xs={6} md={2}>
                         <StyledTypographyPrice>
                           {new Intl.NumberFormat("vi-VN", {

@@ -35,6 +35,7 @@ function ColorChoose({ selectedColor, handleChangeColor, product }) {
             value={color.color_name}
             checked={selectedColor === color}
             onChange={() => handleChangeColor(color)}
+            
           />
           <StyledColorBox
             style={{

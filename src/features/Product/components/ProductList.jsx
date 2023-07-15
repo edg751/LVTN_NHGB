@@ -27,13 +27,15 @@ function ProductList({
   filterStyle,
   filterMaterial,
   gender,
+  searchValue,
 }) {
+  console.log("day la search value LIST", searchValue);
+
   const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const pageCount = Math.ceil(productList.length / 11);
-  console.log(pageCount);
   useEffect(() => {
     (async () => {
       try {
@@ -55,7 +57,8 @@ function ProductList({
           filterColor,
           filterStyle,
           filterMaterial,
-          filterOrderBy
+          filterOrderBy,
+          searchValue
         );
         // Lấy tất cả những sp và màu sắc và hình ảnh đại diện có số lượng >0
 
@@ -83,12 +86,13 @@ function ProductList({
     filterStyle,
     filterMaterial,
     gender,
+    searchValue,
   ]);
 
   const handlePaginationChange = (event, page) => {
     setCurrentPage(page);
   };
-  console.log("LIST SP", productList);
+  console.log("Tổng trang", pageCount);
 
   return (
     <Box sx={{ marginBottom: "50px" }}>

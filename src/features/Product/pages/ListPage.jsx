@@ -20,15 +20,15 @@ const StyledContainer = styled(Container)`
   margin-top: 30px;
 `;
 
-function ListPage(props) {
+function ListPage({ searchValue }) {
   // const [Filter, setFilter] = useState({
   //   _page: 1,
   //   _limit: 12,
   //   _sort: "salePrice:ASC",
   //   "category.id": 1,
   // });
+
   const { gender } = useParams();
-  console.log("gender", gender);
   const [filterCategory, setFilterCategory] = useState([]);
   const [filterColor, setFilterColor] = useState([]);
   const [filterPrice, setFilterPrice] = useState([]);
@@ -92,6 +92,7 @@ function ListPage(props) {
                 filterMaterial={filterMaterial}
                 filterStyle={filterStyle}
                 gender={gender}
+                searchValue={searchValue}
               />
             </Paper>
           </GridRight>

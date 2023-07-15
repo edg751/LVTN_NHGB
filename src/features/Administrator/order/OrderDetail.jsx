@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -187,22 +187,25 @@ function OrderDetail(props) {
                     <TableCell>{item.numberphone}</TableCell>
 
                     <TableCell>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ marginRight: "20px" }}
-                        onClick={handleDuyetClick}
-                      >
-                        Duyệt
-                      </Button>
-
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleKhongDuyetClick}
-                      >
-                        Không duyệt
-                      </Button>
+                      <Link to="/admin/delivery">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          sx={{ marginRight: "20px" }}
+                          onClick={handleDuyetClick}
+                        >
+                          Duyệt
+                        </Button>
+                      </Link>
+                      <Link to="/admin/order">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleKhongDuyetClick}
+                        >
+                          Không duyệt
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
