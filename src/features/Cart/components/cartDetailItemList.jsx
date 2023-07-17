@@ -61,14 +61,14 @@ function CartDetailItemList(props) {
         ))}
 
         <Grid container spacing={2}>
-          <Grid item xs={6} md={8}>
+          {/* <Grid item xs={6} md={8}>
             <TextField fullWidth id="outlined-required" label="Mã giảm giá" />
           </Grid>
           <Grid item xs={6} md={4}>
             <Button fullWidth sx={{ height: "100%" }} variant="contained">
               Áp dụng
             </Button>
-          </Grid>
+          </Grid> */}
           <Grid item xs={6} md={8}>
             <Typography sx={{ textAlign: "left" }}>Tạm tính</Typography>
           </Grid>

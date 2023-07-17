@@ -39,15 +39,6 @@ function ProductList({
   useEffect(() => {
     (async () => {
       try {
-        // const list = await productApi.getAllProduct(
-        //   0,
-        //   8,
-        //   currentPage,
-        //   filterCategory,
-        //   filterColor,
-        //   filterPrice,
-        //   filterOrderBy
-        // );
         const list = await productApi.getAllProduct(
           gender,
           12,
@@ -60,8 +51,6 @@ function ProductList({
           filterOrderBy,
           searchValue
         );
-        // Lấy tất cả những sp và màu sắc và hình ảnh đại diện có số lượng >0
-
         setProductList(
           list.map((x) => ({
             id: x.id_product,

@@ -95,13 +95,20 @@ const StyleButtonAuth = styled(Button)`
   }
 `;
 
-export default function Header({ handleSearch }) {
-  const cartData = JSON.parse(localStorage.getItem("cart"));
+export default function Header({ handleSearch, addToCartClick }) {
+  const [quantityCart, setQuantityCart] = React.useState();
 
-  let totalQuantity = 0;
-  if (cartData && Array.isArray(cartData)) {
-    totalQuantity = cartData.reduce((total, item) => total + item.quantity, 0);
-  }
+  React.useEffect(() => {
+    const cartData = JSON.parse(localStorage.getItem("cart"));
+    let totalQuantity = 0;
+    if (cartData && Array.isArray(cartData)) {
+      totalQuantity = cartData.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
+      setQuantityCart(totalQuantity);
+    }
+  }, [addToCartClick]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -261,9 +268,9 @@ export default function Header({ handleSearch }) {
           <ButtonLink component={LinkNotDecoration} to="/products/1">
             NỮ
           </ButtonLink>
-          <ButtonLink component={LinkNotDecoration} to="/phukien">
+          {/* <ButtonLink component={LinkNotDecoration} to="/phukien">
             PHỤ KIỆN
-          </ButtonLink>
+          </ButtonLink> */}
           <Box sx={{ flexGrow: 1 }} />
           <form onSubmit={handleSearchSubmit}>
             <Search>
@@ -290,7 +297,7 @@ export default function Header({ handleSearch }) {
             {/* CART */}
             <Link to="/cart">
               <IconButton size="large" sx={{ color: "#27006f" }}>
-                <Badge badgeContent={totalQuantity} color="error">
+                <Badge badgeContent={quantityCart} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>

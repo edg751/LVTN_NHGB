@@ -12,7 +12,7 @@ const StyledTextField = styled(TextField)`
   width: 100px;
 `;
 
-function AddQuantity({ handleQuantityChange }) {
+function AddQuantity({ handleQuantityChange, quantityProduct }) {
   const [value, setValue] = useState(1);
 
   const handleInputChange = (event) => {
@@ -21,9 +21,9 @@ function AddQuantity({ handleQuantityChange }) {
     if (inputValue === "" || parseFloat(inputValue) <= 0) {
       // Nếu giá trị là rỗng hoặc số âm, gán giá trị là 1
       setValue(1);
-    } else if (parseFloat(inputValue) > 999) {
+    } else if (parseFloat(inputValue) > quantityProduct) {
       // Nếu giá trị lớn hơn 999, gán giá trị là 999
-      setValue(999);
+      setValue(quantityProduct);
     } else {
       // Giá trị hợp lệ, gán giá trị mới
       setValue(inputValue);

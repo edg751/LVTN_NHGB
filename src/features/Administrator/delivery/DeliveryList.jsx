@@ -73,7 +73,7 @@ function DeliveryList(props) {
                 <TableCell>Tên người nhận</TableCell>
                 <TableCell>Địa chỉ</TableCell>
                 <TableCell>Sdt</TableCell>
-                <TableCell>Trạng thái vận chuyển</TableCell>
+                <TableCell>Trạng thái</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>

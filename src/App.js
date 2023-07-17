@@ -35,6 +35,9 @@ import LoginAdministrator from "features/Administrator/login/LoginAdministrator"
 import UpdateProduct from "features/Administrator/product/updateProduct";
 import { Box } from "@mui/material";
 import AddressProfile from "features/Auth/components/Profile/AddressProfile";
+import HotProducts from "features/Product/components/HotProducts";
+import IndexPage from "features/Product/components/IndexPage";
+import FeedBack from "features/Product/components/FeedBack";
 
 function App() {
   const location = useLocation();
@@ -46,6 +49,10 @@ function App() {
     setSearchValue(value);
   };
   const [searchValue, setSearchValue] = React.useState("");
+  const [addToCartClick, setAddToCartClick] = React.useState("");
+  const handleAddToCartClick = (value) => {
+    setAddToCartClick(value);
+  };
 
   return (
     <div className="App">
@@ -97,14 +104,22 @@ function App() {
         <Route path="/admin/detailColor/:colorid" element={<DetailColor />} />
       </Routes>
 
-      {!isInAdmin && <Header handleSearch={handleSearch} />}
+      {!isInAdmin && (
+        <Header handleSearch={handleSearch} addToCartClick={addToCartClick} />
+      )}
 
       <Routes>
+        <Route path="/" element={<IndexPage />} />
+        <Route path="/feedback" element={<FeedBack />} />
+
         <Route
           path="/products/:gender"
           element={<ListPage searchValue={searchValue} />}
         />
-        <Route path="/products/:gender/:productId" element={<DetailPage />} />
+        <Route
+          path="/products/:gender/:productId"
+          element={<DetailPage handleAddToCartClick={handleAddToCartClick} />}
+        />
         <Route path="/favorite" element={<FavoriteProductList />} />
 
         <Route path="/cart" element={<CartPage />} />

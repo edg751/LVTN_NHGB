@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Typography } from "@mui/material";
 import styled from "@emotion/styled";
+import axiosClient from "api/axiosClient";
+import { useLocation } from "react-router-dom";
 
 const StyledBox = styled(Box)`
   text-align: left;
@@ -22,11 +24,34 @@ const StyledColorBox = styled.span`
 `;
 ColorChoose.propTypes = {};
 function ColorChoose({ selectedColor, handleChangeColor, product }) {
-  console.log("array ne", product[0]);
+  const location = useLocation();
+  const idProduct = location.pathname.split("/").pop();
+  const [colorList, setColorList] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await axiosClient(
+          `/api/product/color_item?productid=${idProduct}`
+        );
+
+        setColorList(
+          list.map((x) => ({
+            color_id: x.color_id,
+            color_name: x.color_name,
+            color_code: x.color_code,
+          }))
+        );
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
+
   return (
     <StyledBox>
       <Typography>Màu sắc :</Typography>
-      {product[0].colors_list.map((color, index) => (
+      {colorList.map((color, index) => (
         <label key={index}>
           <input
             type="radio"
@@ -35,7 +60,6 @@ function ColorChoose({ selectedColor, handleChangeColor, product }) {
             value={color.color_name}
             checked={selectedColor === color}
             onChange={() => handleChangeColor(color)}
-            
           />
           <StyledColorBox
             style={{

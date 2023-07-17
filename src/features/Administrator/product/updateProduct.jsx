@@ -47,7 +47,7 @@ const UpdateProduct = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState("");
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(0);
 
   const [gender, setGender] = useState("");
   const [material, setMaterial] = useState("");
@@ -132,7 +132,7 @@ const UpdateProduct = () => {
     resolver: yupResolver(schema),
   });
 
-  console.log(gender);
+  console.log(disabled);
 
   //   const onSubmit = (data) => {
   //     // Gửi dữ liệu đến API hoặc xử lý theo nhu cầu
@@ -179,7 +179,11 @@ const UpdateProduct = () => {
     setProductDescription(event.target.value);
   };
   const handleCheckboxChange = (event) => {
-    setDisabled(event.target.checked);
+    if (event.target.checked === true) {
+      setDisabled(1);
+    } else {
+      setDisabled(0);
+    }
   };
   return (
     <RootContainer>
@@ -290,10 +294,10 @@ const UpdateProduct = () => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={disabled}
                     onChange={handleCheckboxChange}
                     name="disabledCheckbox"
                     color="primary"
+                    checked={disabled === 1 ? true : false}
                   />
                 }
                 label="Đang hiển thị"

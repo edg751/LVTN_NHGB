@@ -142,7 +142,7 @@ function CartPage(props) {
   };
 
   return (
-    <StyledCartBox>
+    <StyledCartBox sx={{ marginBottom: "50px" }}>
       {/* <> GIỎ HÀNG RỖNG */}
       {savedCartItems.length === 0 && (
         <Box sx={{ paddingTop: "100px" }}>

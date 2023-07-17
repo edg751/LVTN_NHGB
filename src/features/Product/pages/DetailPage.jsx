@@ -27,6 +27,7 @@ import ReviewProduct from "../components/ReviewProduct";
 import productApi from "api/productApi";
 import axiosClient from "api/axiosClient";
 import { useSelector } from "react-redux";
+import ViewProduct from "../components/ViewProduct";
 DetailPage.propTypes = {};
 const StyledGridLeft = styled(Grid)`
   width: 700px;
@@ -37,7 +38,7 @@ const StyledGridRight = styled(Grid)`
   flex: 1 1 0;
 `;
 
-function DetailPage(props) {
+function DetailPage({ handleAddToCartClick }) {
   const location = useLocation();
   const idProduct = location.pathname.split("/").pop();
   console.log(idProduct);
@@ -47,12 +48,12 @@ function DetailPage(props) {
   const [color, setColor] = useState();
   const [size, setSize] = useState();
   const [statusFlag, setStatusFlag] = useState();
+  const [viewedProducts, setViewedProducts] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         const list = await productApi.getProductDetail(idProduct, color);
-        console.log("day la ma color", color);
         setDetailProduct(
           list.map((x) => ({
             id: x.id_product,
@@ -75,6 +76,13 @@ function DetailPage(props) {
       }
     })();
   }, [color, statusFlag]);
+
+  if (loading === true) {
+    console.log("Đây là chi tiết", detailProduct);
+    console.log("Đây là tên SP:", detailProduct[0].name);
+    console.log("Đây là giá SP:", detailProduct[0].price);
+    console.log("Đây là hình SP:", detailProduct[0].images_list[0].pic_link);
+  }
 
   const [open, setOpen] = React.useState(false);
   const [openReview, setOpenReview] = React.useState(false);
@@ -133,6 +141,8 @@ function DetailPage(props) {
 
   const handleGetColor = (value) => {
     console.log("Màu trong Product Detail ahuhu: ", value);
+    // Vẫn là cái id
+    // Lấy id useEffect lại cái list hình
     setColor(value);
   };
 
@@ -140,6 +150,53 @@ function DetailPage(props) {
     console.log("Size trong Product Detail ahuhu: ", value);
     setSize(value);
   };
+  useEffect(() => {
+    const storedViewedProducts = localStorage.getItem("viewedProducts");
+    if (storedViewedProducts) {
+      setViewedProducts(JSON.parse(storedViewedProducts));
+    }
+  }, []);
+
+  const handleViewProduct = () => {
+    const isViewed = viewedProducts.find((p) => p.id === idProduct);
+
+    if (!isViewed && loading === true) {
+      const viewedProduct = {
+        id: idProduct,
+        name: detailProduct[0].name,
+        image: detailProduct[0].images_list[0].pic_link,
+        price: detailProduct[0].price,
+      };
+
+      setViewedProducts((prevProducts) => {
+        const existingViewedProducts = JSON.parse(
+          localStorage.getItem("viewedProducts")
+        );
+        const updatedProducts = existingViewedProducts
+          ? [...existingViewedProducts]
+          : [];
+        const isNewProduct = updatedProducts.some(
+          (p) => p.id === viewedProduct.id
+        );
+
+        if (!isNewProduct) {
+          updatedProducts.push(viewedProduct);
+          localStorage.setItem(
+            "viewedProducts",
+            JSON.stringify(updatedProducts)
+          );
+        }
+
+        return [...prevProducts, viewedProduct];
+      });
+    }
+  };
+  const existingViewedProducts = JSON.parse(
+    localStorage.getItem("viewedProducts")
+  );
+
+  // VIEW
+  handleViewProduct();
 
   return (
     <div>
@@ -227,11 +284,15 @@ function DetailPage(props) {
                     handleGetColor={handleGetColor}
                     handleGetSize={handleGetSize}
                     handleSize={handleSize}
+                    handleAddToCartClick={handleAddToCartClick}
                   />
                 )}
                 {/* <AddToCardForm onSubmit={handleAddToCartSubmit} /> */}
               </StyledGridRight>
             </Grid>
+            {existingViewedProducts && (
+              <ViewProduct products={existingViewedProducts} />
+            )}
           </Paper>
         </Container>
       </Box>

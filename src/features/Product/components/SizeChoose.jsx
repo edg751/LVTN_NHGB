@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Typography } from "@mui/material";
 import styled from "@emotion/styled";
+import { useLocation } from "react-router-dom";
+import axiosClient from "api/axiosClient";
 
 const StyledBox = styled(Box)`
   text-align: left;
@@ -24,16 +26,38 @@ const StyledColorBox = styled.span`
 
 SizeChoose.propTypes = {};
 function SizeChoose({ selectedSize, handleChangeSize, product }) {
+  const location = useLocation();
+  const idProduct = location.pathname.split("/").pop();
+  const [sizeList, setSizeList] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await axiosClient(
+          `/api/product/size_item?productid=${idProduct}`
+        );
+
+        setSizeList(
+          list.map((x) => ({
+            size_id: x.size_id,
+            size_name: x.size_name,
+          }))
+        );
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
   return (
     <StyledBox>
       <Typography>Kích thước :</Typography>
-      {product[0].size_list.map((size, index) => (
+      {sizeList.map((size, index) => (
         <label key={index}>
           <input
             type="radio"
             hidden
             name="size"
-            value="S"
+            value={size.size_name}
             checked={selectedSize === size}
             onChange={() => handleChangeSize(size)}
             // disabled={size.quantitySize <= 0}

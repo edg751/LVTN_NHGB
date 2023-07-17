@@ -98,7 +98,13 @@ const StyledSpanQuantityRate = styled.span`
 `;
 ProductInfo.propTypes = {};
 
-function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
+function ProductInfo({
+  handleSize,
+  product,
+  handleGetColor,
+  handleGetSize,
+  handleAddToCartClick,
+}) {
   const location = useLocation();
   const idProduct = location.pathname.split("/").pop();
 
@@ -107,10 +113,13 @@ function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [statusFavorite, setStatusFavorite] = useState([]);
+  const [quantityProduct, setQuantityProduct] = useState(0);
+
   const [statusFlag, setStatusFlag] = useState();
 
   const handleChangeColor = (color) => {
     setSelectedColor(color);
+    // Lấy cái id
     handleGetColor(color.color_id);
   };
 
@@ -127,11 +136,35 @@ function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
   const handleSizeHelp = () => {
     handleSize();
   };
+  console.log("SELECTED", selectedSize.size_id, selectedColor.color_id);
+  useEffect(() => {
+    (async () => {
+      try {
+        if (selectedSize === "" && selectedColor === "") {
+          const list = await axiosClient(
+            `/api/product/quantity?productid=${idProduct}`
+          );
+
+          setQuantityProduct(list[0].quantity);
+        }
+        if (selectedSize !== "" && selectedColor !== "") {
+          const list = await axiosClient(
+            `/api/product/quantity?productid=${idProduct}&color_id=${selectedColor.color_id}&size_id=${selectedSize.size_id}`
+          );
+
+          setQuantityProduct(list[0].quantity);
+        }
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, [selectedColor, selectedSize]);
 
   const handleAddToCard = () => {
+    handleAddToCartClick(product[0].name);
     const products = {
       name: product[0].name,
-      id: product[0].id, // Đảm bảo rằng product[0] chính là đối tượng sản phẩm bạn muốn lưu trữ id
+      id: product[0].id,
       color: selectedColor.color_name,
       color_id: selectedColor.color_id,
       size_id: selectedSize.size_id,
@@ -140,15 +173,31 @@ function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
       quantity: parseInt(selectedQuantity, 10),
       image: product[0].images_list[0].pic_link,
     };
-    console.log(products);
+
     let cart = [];
-    // Kiểm tra xem đã có dữ liệu trong local storage hay chưa
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
-      cart = JSON.parse(storedCart); // Lấy dữ liệu từ local storage nếu đã tồn tại
+      cart = JSON.parse(storedCart);
+      const existingProductIndex = cart.findIndex(
+        (item) =>
+          item.id === products.id &&
+          item.color_id === products.color_id &&
+          item.size_id === products.size_id
+      );
+
+      if (existingProductIndex !== -1) {
+        // Sản phẩm đã tồn tại trong giỏ hàng, cập nhật số lượng
+        cart[existingProductIndex].quantity += products.quantity;
+      } else {
+        // Sản phẩm chưa tồn tại trong giỏ hàng, thêm mới
+        cart.push(products);
+      }
+    } else {
+      // Giỏ hàng trống, thêm mới sản phẩm
+      cart.push(products);
     }
-    cart.push(products); // Thêm sản phẩm vào giỏ hàng
-    localStorage.setItem("cart", JSON.stringify(cart)); // Lưu giỏ hàng vào local storage
+
+    localStorage.setItem("cart", JSON.stringify(cart));
   };
 
   useEffect(() => {
@@ -242,12 +291,41 @@ function ProductInfo({ handleSize, product, handleGetColor, handleGetSize }) {
       <StyledSpanSizeHelp onClick={handleSizeHelp}>
         Hướng dẫn chọn size
       </StyledSpanSizeHelp>
+      <Typography
+        sx={{ textAlign: "left", marginLeft: "10px", fontWeight: "bold" }}
+      >
+        Số lượng còn lại : {quantityProduct}
+      </Typography>
 
-      <AddQuantity handleQuantityChange={handleQuantityChange} />
+      <AddQuantity
+        handleQuantityChange={handleQuantityChange}
+        quantityProduct={quantityProduct}
+      />
 
-      <StyledButtonAddCard variant="contained" onClick={handleAddToCard}>
-        Thêm vào giỏ hàng
-      </StyledButtonAddCard>
+      {selectedColor !== "" && selectedSize !== "" && quantityProduct > 0 && (
+        <StyledButtonAddCard variant="contained" onClick={handleAddToCard}>
+          Thêm vào giỏ hàng
+        </StyledButtonAddCard>
+      )}
+      {selectedColor !== "" && selectedSize !== "" && quantityProduct == 0 && (
+        <StyledButtonAddCard
+          variant="contained"
+          disabled
+          onClick={handleAddToCard}
+        >
+          Thêm vào giỏ hàng
+        </StyledButtonAddCard>
+      )}
+
+      {(selectedColor === "" || selectedSize === "") && (
+        <StyledButtonAddCard
+          variant="contained"
+          disabled
+          onClick={handleAddToCard}
+        >
+          Thêm vào giỏ hàng
+        </StyledButtonAddCard>
+      )}
 
       {isLoggin && statusFavorite.length === 0 && (
         <StyledButtonAddFavorite

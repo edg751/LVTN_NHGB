@@ -12,9 +12,21 @@ function ProductThumbnail({ product }) {
   console.log("hinh:", product[0].images_list);
   return (
     <Box>
-      {product[0].images_list.map((image, index) => (
-        <StyledImg key={index} src={image.pic_link} alt="" width="48%" />
-      ))}
+      {(() => {
+        const images = [];
+        const imageList = product[0].images_list;
+
+        for (let i = 0; i < 6; i++) {
+          const imageIndex = i % imageList.length;
+          const image = imageList[imageIndex];
+
+          images.push(
+            <StyledImg key={i} src={image.pic_link} alt="" width="48%" />
+          );
+        }
+
+        return images;
+      })()}
     </Box>
   );
 }

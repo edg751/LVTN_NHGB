@@ -64,6 +64,7 @@ function OrderDetail(props) {
             paymentMethod: x.payment_method_id,
             totalAmount: x.total_price,
             status: x.order_status,
+            payment_status: x.payment_status,
             name: x.name,
             address: x.address,
             numberphone: x.phone_number,
@@ -86,15 +87,21 @@ function OrderDetail(props) {
     }
   }
 
+  function getPaymentStatus(status) {
+    if (status == 0) {
+      return "Chưa thanh toán";
+    } else if (status === 1) {
+      return "Đã thanh toán";
+    } else {
+      return "Khác";
+    }
+  }
+
   function getPaymentMethod(paymentMethod) {
     if (paymentMethod === 1) {
       return "Thanh toán khi nhận hàng (COD)";
     } else if (paymentMethod === 2) {
-      return "PayPal";
-    } else if (paymentMethod === 3) {
-      return "Credit Card";
-    } else {
-      return "Khác";
+      return "VNPAY";
     }
   }
 
@@ -105,6 +112,7 @@ function OrderDetail(props) {
       const response = await axiosClient.post("/api/admin/update_order", {
         orderid: orderid,
       });
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -166,6 +174,7 @@ function OrderDetail(props) {
                   <TableCell>Phương thức thanh toán</TableCell>
                   <TableCell>Tổng giá</TableCell>
                   <TableCell>Trạng thái</TableCell>
+                  <TableCell>Trạng thái thanh toán</TableCell>
                   <TableCell>Tên</TableCell>
                   <TableCell>Địa chỉ</TableCell>
                   <TableCell>Số điện thoại</TableCell>
@@ -182,6 +191,9 @@ function OrderDetail(props) {
                     </TableCell>
                     <TableCell>{item.totalAmount}</TableCell>
                     <TableCell>{getOrderStatus(item.status)}</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      {getPaymentStatus(item.payment_status)}
+                    </TableCell>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.address}</TableCell>
                     <TableCell>{item.numberphone}</TableCell>

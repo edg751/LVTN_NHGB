@@ -67,12 +67,12 @@ function Product(props) {
   return (
     <Box padding={1} onClick={handleClick}>
       <Box padding={1}>
-        <Link to={`${product.id}`}>
+        <Link to={`/products/0/${product.id}`}>
           <StyledImg src={linkImage} alt="" width={"100%"} />
         </Link>
       </Box>
       <EllipsisTypography variant="body2">
-        <LinkNotDecoration to={`${product.id}`}>
+        <LinkNotDecoration to={`/products/0/${product.id}`}>
           {product.name}
         </LinkNotDecoration>
       </EllipsisTypography>

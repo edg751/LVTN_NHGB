@@ -1,7 +1,10 @@
 import axiosClient from "./axiosClient";
 const adminApi = {
-  getOrderListWait() {
-    const url = `/api/admin/order_wait`;
+  getOrderListWait(filter) {
+    let url = `/api/admin/order_wait`;
+    if (filter.length > 0) {
+      url += `?filter_order=${filter}`;
+    }
     return axiosClient.get(url);
   },
   gerOderDetail(oderid) {

@@ -14,6 +14,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import styled from "@emotion/styled";
@@ -50,9 +51,11 @@ function CartDetail(props) {
   const [selectedWard, setSelectedWard] = useState("");
   const [cityAndDistrict, setCityAndDistrict] = useState("");
   const [ward, setWard] = useState("");
-  const [selectedAddress, setSelectedAddress] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("otherAddress");
   const navigate = useNavigate();
   const [addressUser, setAddressUser] = useState([]);
+  const [methodPayment, setMethodPayment] = useState("cod");
+  const [numberPhone, setNumberPhone] = useState("");
 
   const schema = yup.object().shape({});
   const form = useForm({
@@ -184,10 +187,11 @@ function CartDetail(props) {
 
   //Vì phải đợi để có trạng thái isSubmitting nên ta thêm async
   const handleSubmit = async (data) => {
-    console.log("Đia chi da chon", selectedAddress);
+    console.log(`Phuong thuc thanh toan:${methodPayment}`);
 
     // Xử lý dữ liệu người dùng sau khi bấm Đặt hàng
     if (selectedAddress === "otherAddress") {
+      data.numberphone = numberPhone;
       data.address += `, ${ward}, ${cityAndDistrict}`;
     } else {
       let inputAddress = selectedAddress;
@@ -208,10 +212,32 @@ function CartDetail(props) {
       data.cartdata = cartData;
       data.userId = user_id;
       console.log("data User:", data);
+      if (methodPayment === "cod") {
+        const response = await axiosClient.post("/api/order", data);
+        console.log("getOrderID", response.orderid.orderid);
 
-      const response = await axiosClient.post("/api/order", data);
-      localStorage.removeItem("cart");
-      navigate("/");
+        localStorage.removeItem("cart");
+        navigate(`/feedback?order_id=${response.orderid.orderid}`);
+      }
+
+      if (methodPayment === "vnpay") {
+        try {
+          const response = await axiosClient.post("/api/order_vnpay", data);
+          console.log("getOrderID", response.orderid.orderid);
+          const responseVNPAY = await axiosClient.get("/create_payment_url", {
+            params: {
+              amount: totalPrice,
+              bankCode: "",
+              language: "",
+              order_id: response.orderid.orderid,
+            },
+          });
+          localStorage.removeItem("cart");
+          window.location.href = responseVNPAY.vnpUrl;
+        } catch (error) {
+          console.log("Error:", error);
+        }
+      }
     } catch (error) {
       // Xử lý lỗi nếu có
       console.error("Error registering user:", error);
@@ -221,6 +247,16 @@ function CartDetail(props) {
   const handleAddressChange = (event) => {
     setSelectedAddress(event.target.value);
   };
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+    const trimmedValue = inputValue.trim(); // Xóa khoảng trắng ở đầu và cuối chuỗi
+
+    // Giới hạn tối đa 11 ký tự và tối thiểu 10 ký tự
+    if (trimmedValue.length <= 11) {
+      setNumberPhone(trimmedValue);
+    }
+  };
+
   return (
     <Box sx={{ marginTop: "50px", paddingBottom: "100px" }}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -276,13 +312,15 @@ function CartDetail(props) {
                   form={form}
                 ></InputField>
 
-                <InputField
+                <TextField
+                  fullWidth
                   name="numberphone"
                   label="Số điện thoại"
                   type="number"
-                  form={form}
-                ></InputField>
-
+                  value={numberPhone}
+                  onChange={handleInputChange}
+                  required
+                />
                 <InputField
                   name="address"
                   label="Địa chỉ"
@@ -346,17 +384,19 @@ function CartDetail(props) {
                   borderRadius: "5px",
                 }}
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
                 name="radio-buttons-group"
+                value={methodPayment}
+                onChange={(event) => setMethodPayment(event.target.value)}
                 form={form}
               >
                 <FormControlLabel
                   value="cod"
-                  checked={true}
+                  name="method_payment"
                   control={<Radio />}
                   label="Thanh toán khi nhận hàng (COD)"
                 />
                 <FormControlLabel
+                  name="method_payment"
                   value="vnpay"
                   control={<Radio />}
                   label="Thanh toán qua VNPAY"
