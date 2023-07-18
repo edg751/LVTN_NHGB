@@ -31,6 +31,12 @@ const MODE = {
   resetpass: "resetpass",
 };
 
+const StyledMenuItem = styled(MenuItem)`
+  a {
+    text-decoration: none;
+  }
+`;
+
 const ButtonLink = styled(Button)`
   margin: 0 10px;
   color: black;
@@ -188,7 +194,9 @@ export default function Header({ handleSearch, addToCartClick }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Tài khoản</MenuItem>
+      <StyledMenuItem>
+        <Link to="/profile">Tài khoản</Link>
+      </StyledMenuItem>
       <MenuItem onClick={handleLogOut}>Đăng xuất</MenuItem>
     </Menu>
   );

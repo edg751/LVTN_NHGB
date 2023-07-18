@@ -42,7 +42,6 @@ const StyledFormControlAddress = styled(FormControl)`
 CartDetail.propTypes = {};
 
 function CartDetail(props) {
-  const [dataUser, setDataUser] = useState({});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -113,19 +112,6 @@ function CartDetail(props) {
       console.error(error);
     }
   };
-  useEffect(() => {
-    (async () => {
-      try {
-        const list = await axios.get(
-          "https://provinces.open-api.vn/api/?depth=1"
-        );
-
-        setCities(list.data);
-      } catch (error) {
-        console.log("Error to fetch category API", error);
-      }
-    })();
-  }, []);
 
   const fetchDistricts = async (cityCode) => {
     try {

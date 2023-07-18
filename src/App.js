@@ -38,6 +38,7 @@ import AddressProfile from "features/Auth/components/Profile/AddressProfile";
 import HotProducts from "features/Product/components/HotProducts";
 import IndexPage from "features/Product/components/IndexPage";
 import FeedBack from "features/Product/components/FeedBack";
+import Profile from "features/Product/pages/Profile";
 
 function App() {
   const location = useLocation();
@@ -111,6 +112,7 @@ function App() {
       <Routes>
         <Route path="/" element={<IndexPage />} />
         <Route path="/feedback" element={<FeedBack />} />
+        <Route path="/profile" element={<Profile />} />
 
         <Route
           path="/products/:gender"
