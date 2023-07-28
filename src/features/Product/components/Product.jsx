@@ -51,6 +51,8 @@ function Product(props) {
 
   const [selectedColor, setSelectedColor] = useState("");
 
+  console.log("ahihi", product);
+
   const handleChangeColor = (color) => {
     // setSelectedColor(color);
     console.log("Màu: ", color.color_id);
@@ -63,6 +65,11 @@ function Product(props) {
     }
   };
   //
+
+  if (product.id === 6) {
+    console.log("KM", product);
+  }
+
   const handleClick = () => {};
   return (
     <Box padding={1} onClick={handleClick}>
@@ -79,10 +86,28 @@ function Product(props) {
 
       <StyledTypographyPrice variant="body2">
         <Box component="span" fontSize="16px" fontWeight="bold" marginRight={1}>
-          {new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
-          }).format(product.price)}
+          {product.promotion_price !== null &&
+          new Date(product.from_date) <= new Date() &&
+          new Date(product.to_date) >= new Date() ? (
+            <>
+              {" "}
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(product.promotion_price)}
+              <strike style={{ color: "#787779", marginLeft: "10px" }}>
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(product.price)}
+              </strike>{" "}
+            </>
+          ) : (
+            new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(product.price)
+          )}
         </Box>
       </StyledTypographyPrice>
 

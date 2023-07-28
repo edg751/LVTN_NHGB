@@ -25,7 +25,7 @@ function Register(props) {
         variant: "success",
       });
     } catch (error) {
-      enqueueSnackbar(error.message, { variant: "error" });
+      enqueueSnackbar("Địa chỉ email đã tồn tại", { variant: "error" });
     }
   };
   return (

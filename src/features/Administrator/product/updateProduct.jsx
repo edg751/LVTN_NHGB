@@ -173,7 +173,14 @@ const UpdateProduct = () => {
     setProductName(event.target.value);
   };
   const handlePriceChange = (event) => {
-    setProductPrice(event.target.value);
+    const inputValue = event.target.value;
+    const sanitizedValue = inputValue.replace(/\D/g, ""); // Loại bỏ các ký tự không phải số
+    const parsedValue = parseInt(sanitizedValue, 10); // Chuyển giá trị sang dạng số nguyên
+
+    // Kiểm tra giá trị nhập vào có nằm trong khoảng từ 1-999 hay không
+    if (parsedValue >= 1 && parsedValue <= 9999999) {
+      setProductPrice(parsedValue); // Lưu giá trị vào state nếu hợp lệ
+    }
   };
   const handleDescriptionChange = (event) => {
     setProductDescription(event.target.value);
@@ -220,9 +227,10 @@ const UpdateProduct = () => {
                 required
                 name="price"
                 label="Giá tiền"
-                defaultValue={productPrice}
+                value={productPrice}
                 onChange={handlePriceChange}
                 sx={{ marginBottom: "20px" }}
+                type="number"
               ></TextField>
               <TextField
                 fullWidth

@@ -6,16 +6,6 @@ import Slider from "react-slick";
 import productApi from "api/productApi";
 import Product from "./Product";
 
-const products = [
-  { id: 1, name: "Product 1", image: "image1.jpg" },
-  { id: 2, name: "Product 2", image: "image2.jpg" },
-  { id: 3, name: "Product 3", image: "image3.jpg" },
-  { id: 4, name: "Product 4", image: "image4.jpg" },
-  { id: 5, name: "Product 5", image: "image5.jpg" },
-  { id: 6, name: "Product 6", image: "image6.jpg" },
-  // Thêm các sản phẩm khác vào danh sách
-];
-
 const HotProducts = () => {
   const [productHotList, setProductHotList] = useState([]);
 
@@ -40,6 +30,9 @@ const HotProducts = () => {
             price: x.price,
             color: x.colors_list,
             image: x.images_list,
+            promotion_price: x.promotion_price,
+            from_date: x.from_date,
+            to_date: x.to_date,
           }))
         );
       } catch (error) {

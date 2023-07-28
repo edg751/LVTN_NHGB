@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   Typography,
+  Box,
 } from "@mui/material";
 import adminApi from "api/adminApi";
 import { Link } from "react-router-dom";
@@ -29,11 +30,12 @@ const ContentContainer = styled(Container)`
 function OderList(props) {
   const [oderList, setOrderList] = useState([]);
   const [filterOrder, setFilterOrder] = useState("");
+  const [filter2, setFilter2] = useState(0);
 
   useEffect(() => {
     (async () => {
       try {
-        const list = await adminApi.getOrderListWait(filterOrder);
+        const list = await adminApi.getOrderListWait(filterOrder, filter2);
         setOrderList(
           list.map((x) => ({
             order_id: x.order_id,
@@ -41,6 +43,7 @@ function OderList(props) {
             order_date: x.order_date,
             total_price: x.total_price,
             payment_method_id: x.payment_method_id,
+            order_status: x.order_status,
           }))
         );
         console.log(list);
@@ -48,12 +51,7 @@ function OderList(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, [filterOrder]);
-
-  const handleFilterOrder = (value) => {
-    setFilterOrder(value);
-    console.log("DAY LA value orderFilter", filterOrder);
-  };
+  }, [filterOrder, filter2]);
 
   return (
     <RootContainer>
@@ -68,7 +66,17 @@ function OderList(props) {
           <Typography variant="h5" sx={{ marginTop: "60px" }}>
             DANH SÁCH ĐƠN HÀNG CHỜ DUYỆT
           </Typography>
-          <FilterOrder handleFilterOrder={handleFilterOrder} />
+          <Box>
+            <Button variant="outlined" onClick={() => setFilter2(0)}>
+              Đơn hàng chờ duyệt
+            </Button>
+            <Button onClick={() => setFilter2(1)} variant="outlined">
+              Đơn hàng đã duyệt
+            </Button>
+            <Button onClick={() => setFilter2(2)} variant="outlined">
+              Đơn hàng đã từ chối
+            </Button>
+          </Box>
           <Table>
             <TableHead>
               <TableRow>
@@ -77,6 +85,8 @@ function OderList(props) {
                 <TableCell>Tổng giá trị</TableCell>
                 <TableCell>Phương thức thanh toán</TableCell>
                 <TableCell>Ngày tạo</TableCell>
+                <TableCell>Trạng thái</TableCell>
+
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -96,6 +106,13 @@ function OderList(props) {
 
                   <TableCell>
                     {dayjs(order.order_date).format("YYYY-MM-DD")}
+                  </TableCell>
+                  <TableCell>
+                    {order.order_status == 0
+                      ? "Đơn hàng chờ duyệt"
+                      : order.order_status == 1
+                      ? "Đơn hàng đã duyệt"
+                      : "Đơn hàng không được duyệt"}
                   </TableCell>
 
                   <TableCell>

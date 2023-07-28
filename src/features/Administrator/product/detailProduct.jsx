@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Table,
   TableContainer,
@@ -10,15 +10,29 @@ import {
   Paper,
   TextField,
   Button,
+  Container,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import adminApi from "api/adminApi";
 import productApi from "api/productApi";
 import axiosClient from "api/axiosClient";
-
+import HeaderAdminPage from "../components/HeaderAdminPage";
+import CategoryAdminPage from "../components/CategoryAdminPage";
+import styled from "@emotion/styled";
+const ContentContainer = styled(Container)`
+  flex-grow: 1;
+  padding: 24px;
+`;
+const RootContainer = styled("div")`
+  display: flex;
+  margin-top: 100px;
+`;
 const DetailProductForm = () => {
+  const [file, setFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const location = useLocation();
   const idProduct = location.pathname.split("/").pop();
+  const navigate = useNavigate();
   // Dữ liệu giả cho bảng
   const [productDetail, setProductDetail] = useState([]);
   const [imageDetail, setImageDetail] = useState([]);
@@ -63,6 +77,7 @@ const DetailProductForm = () => {
         "/api/admin/update_quantity_product",
         data
       );
+      navigate("/admin/productList");
     } catch (error) {
       console.log("Error to fetch category API", error);
     }
@@ -70,6 +85,11 @@ const DetailProductForm = () => {
 
   const handleQuantityChange = (index, event) => {
     const { value } = event.target;
+    const quantity = parseInt(value, 10);
+    if (isNaN(quantity) || quantity < 0 || quantity > 999) {
+      // Do not update the state if the input is invalid
+      return;
+    }
     setProductDetail((prevProductDetail) =>
       prevProductDetail.map((item, i) => {
         if (i === index) {
@@ -103,7 +123,9 @@ const DetailProductForm = () => {
   };
 
   return (
-    <div>
+    <RootContainer>
+      <HeaderAdminPage />
+      <CategoryAdminPage />
       <TableContainer>
         <Table>
           <TableHead>
@@ -162,12 +184,17 @@ const DetailProductForm = () => {
               </TableRow>
             ))}
           </TableBody>
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Cập nhật
+          </Button>
         </Table>
       </TableContainer>
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Cập nhật
-      </Button>
-    </div>
+    </RootContainer>
   );
 };
 

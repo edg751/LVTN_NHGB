@@ -82,21 +82,6 @@ function ReviewProduct({ handleReview, statusFlag }) {
     })();
   }, [statusFlag]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3500/api/rate?productid=1"
-        );
-        setRateData(response.data);
-      } catch (error) {
-        console.log("Error fetching rate data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const loggedInUser = useSelector((state) => state.user.current);
   // Nếu nó có id thì là đăng nhập rồi
   const isLoggin = !!loggedInUser.user_id;

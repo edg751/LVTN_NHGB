@@ -29,8 +29,28 @@ function RegisterForm(props) {
       background-color: #1a0049;
     }
   `;
-  
-  const schema = yup.object().shape({});
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .required("Vui lòng nhập email !")
+      .max(30, "Email tối đa 30 kí tự")
+      .email("Vui lòng nhập email hợp lệ !"),
+    password: yup
+      .string()
+      .required("Vui lòng nhập password")
+      .min(6, "Password phải dài hơn 6 kí tự")
+      .max(20, "Password tối đa 20 kí tự"),
+    fullname: yup
+      .string()
+      .required("Vui lòng nhập họ tên !")
+      .test("", "Tên phải dài 2 chữ trở lên", (value) => {
+        return value.split(" ").length >= 2;
+      }),
+    retypePassword: yup
+      .string()
+      .required("Vui lòng nhập lại password")
+      .oneOf([yup.ref("password")], "Password không trùng nhau"),
+  });
   const form = useForm({
     defaultValues: {
       fullname: "",

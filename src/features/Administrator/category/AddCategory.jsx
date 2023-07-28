@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "@emotion/styled";
 import { Button, TextField, Typography } from "@mui/material";
 import axiosClient from "api/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 const FormContainer = styled("div")({
   display: "flex",
@@ -28,7 +29,7 @@ const ButtonContainer = styled("div")({
 
 const AddCategory = () => {
   const [categoryName, setCategoryName] = useState("");
-
+  const navigate = useNavigate();
   const handleInputChange = (event) => {
     setCategoryName(event.target.value);
   };
@@ -40,6 +41,7 @@ const AddCategory = () => {
       });
       console.log(response.data); // Log the response data if needed
       setCategoryName(""); // Clear the input field
+      navigate("/admin/categoryList");
     } catch (error) {
       console.error(error); // Handle error if needed
     }

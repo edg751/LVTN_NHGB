@@ -66,6 +66,9 @@ function DetailPage({ handleAddToCartClick }) {
             images_list: x.images_list,
             colors_list: x.colors_list,
             size_list: x.size_list,
+            promotion_price: x.promotion_price,
+            from_date: x.from_date,
+            to_date: x.to_date,
             // colors: x.color,
             // sizes: x.size,
           }))

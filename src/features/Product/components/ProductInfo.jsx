@@ -136,7 +136,7 @@ function ProductInfo({
   const handleSizeHelp = () => {
     handleSize();
   };
-  console.log("SELECTED", selectedSize.size_id, selectedColor.color_id);
+  console.log("product", product);
   useEffect(() => {
     (async () => {
       try {
@@ -164,12 +164,15 @@ function ProductInfo({
     handleAddToCartClick(product[0].name);
     const products = {
       name: product[0].name,
-      id: product[0].id,
+      id: idProduct,
       color: selectedColor.color_name,
       color_id: selectedColor.color_id,
       size_id: selectedSize.size_id,
       size: selectedSize.size_name,
-      price: product[0].price,
+      price:
+        product[0].promotion_price !== null
+          ? product[0].promotion_price
+          : product[0].price,
       quantity: parseInt(selectedQuantity, 10),
       image: product[0].images_list[0].pic_link,
     };
@@ -253,7 +256,7 @@ function ProductInfo({
   // Nếu nó có id thì là đăng nhập rồi
 
   const isLoggin = loggedInUser && loggedInUser.user_id ? true : null;
-  console.log("length: ", statusFavorite.length);
+  console.log("Số sao: ", product[0].rate);
 
   return (
     <Box>
@@ -270,12 +273,30 @@ function ProductInfo({
         <StyledSpanQuantityRate>{product[0].total_rate}</StyledSpanQuantityRate>
         {/* <Rating name="half-rating" defaultValue={2.5} precision={0.5} /> */}
       </StyledBoxDetail>
+
       <StyledProductPrice>
-        {" "}
-        {new Intl.NumberFormat("vi-VN", {
-          style: "currency",
-          currency: "VND",
-        }).format(product[0].price)}
+        {product[0].promotion_price !== null &&
+        new Date(product[0].from_date) <= new Date() &&
+        new Date(product[0].to_date) >= new Date() ? (
+          <>
+            {" "}
+            {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(product[0].promotion_price)}
+            <strike style={{ color: "#958a9a", marginLeft: "10px" }}>
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(product[0].price)}
+            </strike>{" "}
+          </>
+        ) : (
+          new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(product[0].price)
+        )}
       </StyledProductPrice>
 
       <ColorChoose

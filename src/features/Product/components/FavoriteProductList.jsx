@@ -52,7 +52,7 @@ const FavoriteProducts = () => {
           {FavoriteList.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
               <Link to={`/products/0/${product.id_product}`} underline="none">
-                <Card>
+                <Card sx={{ minHeight: "500px" }}>
                   <CardMedia
                     component="img"
                     height="100%"
@@ -60,11 +60,8 @@ const FavoriteProducts = () => {
                     image={product.pic_link}
                     alt={product.product_name}
                   />
-                  <CardContent>
+                  <CardContent sx={{ marginTop: "10px" }}>
                     <Typography variant="h6">{product.product_name}</Typography>
-                    <Typography variant="body1">
-                      Giá : {product.price}
-                    </Typography>
                   </CardContent>
                 </Card>
               </Link>

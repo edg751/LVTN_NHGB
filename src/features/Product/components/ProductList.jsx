@@ -58,6 +58,9 @@ function ProductList({
             price: x.price,
             color: x.colors_list,
             image: x.images_list,
+            from_date: x.from_date,
+            promotion_price: x.promotion_price,
+            to_date: x.to_date,
           }))
         );
 

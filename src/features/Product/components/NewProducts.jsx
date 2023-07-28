@@ -40,6 +40,10 @@ const NewProducts = () => {
             price: x.price,
             color: x.colors_list,
             image: x.images_list,
+            promotion_price: x.promotion_price,
+            from_date: x.from_date,
+            to_date: x.to_date,
+            
           }))
         );
       } catch (error) {

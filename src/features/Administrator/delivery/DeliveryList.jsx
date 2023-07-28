@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   Typography,
+  Box,
 } from "@mui/material";
 import adminApi from "api/adminApi";
 import { Link } from "react-router-dom";
@@ -27,11 +28,11 @@ const ContentContainer = styled(Container)`
 
 function DeliveryList(props) {
   const [deliveryList, setDeliveryList] = useState([]);
-
+  const [filter, setFilter2] = useState(0);
   useEffect(() => {
     (async () => {
       try {
-        const list = await orderApi.getDeliveryList();
+        const list = await orderApi.getDeliveryList(filter);
         setDeliveryList(
           list.map((x) => ({
             order_id: x.order_id,
@@ -49,7 +50,7 @@ function DeliveryList(props) {
         console.log("Error to fetch category API", error);
       }
     })();
-  }, []);
+  }, [filter]);
 
   return (
     <RootContainer>
@@ -64,6 +65,20 @@ function DeliveryList(props) {
           <Typography variant="h5" sx={{ marginTop: "60px" }}>
             DANH SÁCH ĐƠN HÀNG VẬN CHUYỂN
           </Typography>
+          <Box>
+            <Button variant="outlined" onClick={() => setFilter2(0)}>
+              Đơn hàng chờ vận chuyển
+            </Button>
+            <Button onClick={() => setFilter2(1)} variant="outlined">
+              Đơn hàng đang vận chuyển
+            </Button>
+            <Button onClick={() => setFilter2(2)} variant="outlined">
+              Đơn hàng đã đã giao
+            </Button>
+            <Button onClick={() => setFilter2(3)} variant="outlined">
+              Đơn hàng đã đã hoàn trả
+            </Button>
+          </Box>
           <Table>
             <TableHead>
               <TableRow>

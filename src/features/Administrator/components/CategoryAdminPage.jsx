@@ -43,13 +43,6 @@ function CategoryAdminPage(props) {
       <Toolbar />
       <DrawerContainer>
         <List>
-          <ListItem button>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-
           <StyledLink to="/admin/productList">
             <ListItem button>
               <ListItemIcon>
@@ -113,12 +106,22 @@ function CategoryAdminPage(props) {
             </ListItem>
           </StyledLink>
 
-          <ListItem button>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Customers" />
-          </ListItem>
+          <StyledLink to="/admin/notificationList">
+            <ListItem button>
+              <ListItemIcon>
+                <BorderColorIcon />
+              </ListItemIcon>
+              <ListItemText primary="Quản lý thông báo" />
+            </ListItem>
+          </StyledLink>
+          <StyledLink to="/admin/userList">
+            <ListItem button>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Customers" />
+            </ListItem>
+          </StyledLink>
         </List>
       </DrawerContainer>
     </StyledDrawer>

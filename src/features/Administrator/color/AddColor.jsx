@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "@emotion/styled";
 import { Button, TextField, Typography } from "@mui/material";
 import axiosClient from "api/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 const FormContainer = styled("div")({
   display: "flex",
@@ -29,7 +30,7 @@ const ButtonContainer = styled("div")({
 const AddColor = () => {
   const [colorName, setColorName] = useState("");
   const [colorCode, setColorCode] = useState("");
-
+  const navigate = useNavigate();
   const handleInputChange = (event) => {
     setColorName(event.target.value);
   };
@@ -45,6 +46,7 @@ const AddColor = () => {
       });
       console.log(response.data); // Log the response data if needed
       setColorName(""); // Clear the input field
+      navigate("/admin/colorList");
     } catch (error) {
       console.error(error); // Handle error if needed
     }

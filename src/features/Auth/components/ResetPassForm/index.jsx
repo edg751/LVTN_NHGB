@@ -32,7 +32,13 @@ const StyledButton = styled(Button)`
 `;
 
 function ResetPassForm(props) {
-  const schema = yup.object().shape({});
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .required("Vui lòng nhập email !")
+      .max(30, "Email tối đa 30 kí tự")
+      .email("Vui lòng nhập email hợp lệ !"),
+  });
   const form = useForm({
     defaultValues: {
       email: "",
@@ -47,8 +53,11 @@ function ResetPassForm(props) {
     const response = await axiosClient.post("/api/auth/reset", {
       email: values,
     });
-    // console.log("hihi", response);
-    enqueueSnackbar(response.success, { variant: "success" });
+    if (response === 1) {
+      enqueueSnackbar("Đã gửi email reset mật khẩu", { variant: "success" });
+    } else {
+      enqueueSnackbar("Không tìm thấy email", { variant: "error" });
+    }
   };
   const { isSubmitting } = useFormState(form);
   return (

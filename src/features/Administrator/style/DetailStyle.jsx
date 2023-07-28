@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from "@emotion/styled";
 import { Button, TextField, Typography } from "@mui/material";
 import axiosClient from "api/axiosClient";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import productApi from "api/productApi";
 import categoryApi from "api/categoriesApi";
 
@@ -33,7 +33,7 @@ const DetailStyle = () => {
   const location = useLocation();
   const idStyle = location.pathname.split("/").pop();
   const [styleName, setStyleName] = useState("");
-
+  const navigate = useNavigate();
   const handleInputChange = (event) => {
     setStyleName(event.target.value);
   };
@@ -59,6 +59,7 @@ const DetailStyle = () => {
       });
       console.log(response.data); // Log the response data if needed
       setStyleName(""); // Clear the input field
+      navigate("/admin/styleList");
     } catch (error) {
       console.error(error); // Handle error if needed
     }

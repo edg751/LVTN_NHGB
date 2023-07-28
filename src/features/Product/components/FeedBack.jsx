@@ -65,7 +65,7 @@ const FeedBack = () => {
   }, []);
 
   const totalAmount = orderItems.reduce(
-    (total, item) => total + item.promotion_price_order * item.quantity,
+    (total, item) => total + item.promotion_price_order,
     0
   );
 
@@ -104,7 +104,7 @@ const FeedBack = () => {
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
                     currency: "VND",
-                  }).format(item.promotion_price_order)}
+                  }).format(item.promotion_price_order / item.quantity)}
                 </TableCell>
               </TableRow>
             ))}

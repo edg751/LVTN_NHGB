@@ -15,7 +15,14 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { Button, Dialog, DialogContent } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import Login from "features/Auth/components/Login";
 import Register from "features/Auth/components/Register";
 import { Link } from "react-router-dom";
@@ -25,6 +32,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ResetPassForm from "features/Auth/components/ResetPassForm";
+import axiosClient from "api/axiosClient";
 const MODE = {
   login: "login",
   register: "register",
@@ -200,6 +208,18 @@ export default function Header({ handleSearch, addToCartClick }) {
       <MenuItem onClick={handleLogOut}>Đăng xuất</MenuItem>
     </Menu>
   );
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleNotificationClick = async () => {
+    setOpenDialog(true);
+    let data = {};
+    data.user_id = loggedInUser.user_id;
+    const response = await axiosClient.post("/api/notify_read", data);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -254,6 +274,53 @@ export default function Header({ handleSearch, addToCartClick }) {
     </Menu>
   );
 
+  const [notifications, setNotifications] = React.useState([]);
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        if (isLoggin) {
+          const list = await axiosClient.get(
+            `/api/notify_user?user_id=${loggedInUser.user_id}`
+          );
+          setNotifications(
+            list.map((x) => ({
+              notification_id: x.notification_id,
+              notification_content: x.notification_content,
+              notification_date: x.notification_date,
+              is_read: x.is_read,
+            }))
+          );
+          console.log(list);
+        }
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
+
+  const [quantityNotifications, setQuantityNotifications] = React.useState([]);
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        if (isLoggin) {
+          const list = await axiosClient.get(
+            `/api/quantity_notify_user?user_id=${loggedInUser.user_id}`
+          );
+          setQuantityNotifications(
+            list.map((x) => ({
+              quantity_notify: x.quantity_notify,
+            }))
+          );
+          console.log(list);
+        }
+      } catch (error) {
+        console.log("Error to fetch category API", error);
+      }
+    })();
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "#fcaf17" }}>
@@ -296,11 +363,13 @@ export default function Header({ handleSearch, addToCartClick }) {
           </form>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {/* WISH */}
-            <Link to="/favorite">
-              <IconButton size="large" sx={{ color: "#27006f" }}>
-                <FavoriteIcon />
-              </IconButton>
-            </Link>
+            {isLoggin && (
+              <Link to="/favorite">
+                <IconButton size="large" sx={{ color: "#27006f" }}>
+                  <FavoriteIcon />
+                </IconButton>
+              </Link>
+            )}
 
             {/* CART */}
             <Link to="/cart">
@@ -312,15 +381,74 @@ export default function Header({ handleSearch, addToCartClick }) {
             </Link>
 
             {/* NOTIFY */}
-            {/* <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              sx={{ color: "#27006f" }}
-            >
-              <Badge badgeContent={0} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
+            {isLoggin && (
+              <IconButton
+                size="large"
+                sx={{ color: "#27006f" }}
+                onClick={handleNotificationClick}
+              >
+                {quantityNotifications.length > 0 && (
+                  <Badge
+                    badgeContent={quantityNotifications[0].quantity_notify}
+                    color="error"
+                  >
+                    <NotificationsIcon />
+                  </Badge>
+                )}
+
+                {quantityNotifications.length === 0 && (
+                  <Badge badgeContent={"0"} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                )}
+              </IconButton>
+            )}
+
+            <Dialog open={openDialog} onClose={handleDialogClose}>
+              <DialogTitle>Thông báo</DialogTitle>
+              <DialogContent>
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.notification_id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Avatar
+                      sx={{ backgroundColor: "#1976d2", marginRight: "10px" }}
+                    >
+                      <NotificationsIcon />
+                    </Avatar>
+                    <div>
+                      <Typography
+                        variant="body1"
+                        component="p"
+                        fontWeight="bold"
+                        sx={{ marginBottom: "5px" }}
+                      >
+                        {notification.notification_content}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        component="p"
+                        color={notification.is_read === 0 ? "red" : "black"}
+                      >
+                        Ngày thông báo:{" "}
+                        {new Date(
+                          notification.notification_date
+                        ).toLocaleDateString()}
+                      </Typography>
+                    </div>
+                  </div>
+                ))}
+              </DialogContent>
+
+              <DialogActions>
+                <Button onClick={handleDialogClose}>Đóng</Button>
+              </DialogActions>
+            </Dialog>
 
             {isLoggin && (
               <>

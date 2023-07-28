@@ -27,21 +27,23 @@ const ButtonContainer = styled("div")({
   justifyContent: "center",
 });
 
-const AddMaterial = () => {
-  const [materialName, setMaterialname] = useState("");
+const AddNotification = () => {
+  const [Content, setContent] = useState("");
   const navigate = useNavigate();
-  const handleInputChange = (event) => {
-    setMaterialname(event.target.value);
+
+  const handleInputChange2 = (event) => {
+    setContent(event.target.value);
   };
+  const employee = JSON.parse(localStorage.getItem("admin"));
 
   const handleSubmit = async () => {
     try {
-      const response = await axiosClient.post("/api/admin/add_material", {
-        material_name: materialName,
+      const response = await axiosClient.post("/api/addNotification", {
+        content: Content,
+        employee_id: employee[0].id_employee,
       });
       console.log(response.data); // Log the response data if needed
-      setMaterialname(""); // Clear the input field
-      navigate("/admin/materialList");
+      navigate("/admin/notificationList");
     } catch (error) {
       console.error(error); // Handle error if needed
     }
@@ -51,13 +53,15 @@ const AddMaterial = () => {
     <FormContainer>
       <StyledForm>
         <Typography variant="h5" sx={{ marginBottom: "20px" }}>
-          THÊM LOẠI VẢI
+          THÊM THÔNG BÁO
         </Typography>
+
         <InputField
-          label="Tên loại vải"
-          value={materialName}
-          onChange={handleInputChange}
+          label="Nội dung thông báo"
+          value={Content}
+          onChange={handleInputChange2}
         />
+
         <ButtonContainer>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Thêm
@@ -68,4 +72,4 @@ const AddMaterial = () => {
   );
 };
 
-export default AddMaterial;
+export default AddNotification;

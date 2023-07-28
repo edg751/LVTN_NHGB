@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 import styled from "@emotion/styled";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, TextField, Typography } from "@mui/material";
 import axiosClient from "api/axiosClient";
 import { useLocation, useNavigate } from "react-router-dom";
 import productApi from "api/productApi";
@@ -29,28 +29,25 @@ const ButtonContainer = styled("div")({
   justifyContent: "center",
 });
 
-const DetailColor = () => {
-  const navigate = useNavigate();
-
+const DetailNotification = () => {
   const location = useLocation();
-  const icColor = location.pathname.split("/").pop();
-  const [colorName, setColorName] = useState("");
-  const [colorCode, setColorCode] = useState("");
-
+  const idNotification = location.pathname.split("/").pop();
+  const [Content, setContent] = useState("");
+  const [IsActive, setIsActive] = useState(0);
+  const navigate = useNavigate();
   const handleInputChange = (event) => {
-    setColorName(event.target.value);
+    setContent(event.target.value);
   };
 
-  const handleInputChange2 = (event) => {
-    setColorCode(event.target.value);
-  };
   useEffect(() => {
     (async () => {
       try {
-        const list = await categoryApi.getDetailColor(icColor);
+        const list = await axiosClient.get(
+          `/api/notificationDetail?notification_id=${idNotification}`
+        );
         console.log(list);
-        setColorName(list[0].color_name);
-        setColorCode(list[0].color_code);
+        setContent(list[0].notification_content);
+        setIsActive(list[0].is_active);
       } catch (error) {
         console.log("Error to fetch category API", error);
       }
@@ -59,16 +56,21 @@ const DetailColor = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axiosClient.post("/api/admin/update_color", {
-        color_name: colorName,
-        color_code: colorCode,
-        color_id: icColor,
+      const response = await axiosClient.post("/api/updateNotification", {
+        content: Content,
+        is_active: IsActive,
+        notification_id: idNotification,
       });
-      console.log(response.data); // Log the response data if needed
-      setColorName(""); // Clear the input field
-      navigate("/admin/colorList");
+      navigate("/admin/notificationList");
     } catch (error) {
       console.error(error); // Handle error if needed
+    }
+  };
+  const handleCheckboxChange = (event) => {
+    if (event.target.checked) {
+      setIsActive(1);
+    } else {
+      setIsActive(0);
     }
   };
 
@@ -76,21 +78,22 @@ const DetailColor = () => {
     <FormContainer>
       <StyledForm>
         <Typography variant="h5" sx={{ marginBottom: "20px" }}>
-          CHI TIẾT MÀU CÓ ID : {icColor}
+          THÔNG BÁO CÓ ID : {idNotification}
         </Typography>
 
         <InputField
-          label="Tên màu"
-          value={colorName}
+          label="Nội dung"
+          value={Content}
           onChange={handleInputChange}
         />
-
-        <InputField
-          label="Mã màu"
-          value={colorCode}
-          onChange={handleInputChange2}
-        />
-
+        <div>
+          Hiển thị
+          <Checkbox
+            checked={IsActive}
+            onChange={handleCheckboxChange}
+            color="primary"
+          />
+        </div>
         <ButtonContainer>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Cập nhật
@@ -101,4 +104,4 @@ const DetailColor = () => {
   );
 };
 
-export default DetailColor;
+export default DetailNotification;

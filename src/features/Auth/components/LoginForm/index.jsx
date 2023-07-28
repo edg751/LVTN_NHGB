@@ -28,7 +28,22 @@ function LoginForm(props) {
     }
   `;
 
-  const schema = yup.object().shape({});
+  const schema = yup.object().shape({
+    // title: yup
+    //   .string()
+    //   .required("Please enter title")
+    //   .min(5, "Title is too short!"),
+    email: yup
+      .string()
+      .required("Vui lòng nhập email !")
+      .max(30, "Email tối đa 30 kí tự")
+      .email("Vui lòng nhập email hợp lệ !"),
+    password: yup
+      .string()
+      .required("Vui lòng nhập password")
+      .min(6, "Password phải dài hơn 6 kí tự")
+      .max(20, "Password tối đa 20 kí tự"),
+  });
   const form = useForm({
     defaultValues: {
       email: "",

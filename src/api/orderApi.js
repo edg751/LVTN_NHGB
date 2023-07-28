@@ -1,8 +1,11 @@
 import axiosClient from "./axiosClient";
 
 const orderApi = {
-  getDeliveryList() {
-    const url = "/api/admin/delivery_list";
+  getDeliveryList(filter) {
+    let url = "/api/admin/delivery_list";
+
+    url += `?filter=${filter}`;
+    console.log(url);
     return axiosClient.get(url);
   },
   getDeliveryStatus(delivery_id) {
